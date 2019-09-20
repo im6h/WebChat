@@ -1,0 +1,57 @@
+$backgroundButton: #CC0000;
+$backgroundNavbar: white;
+* {
+  margin-top: 0;
+  display: inline;
+  background-color: $backgroundNavbar;
+  position: relative;
+}
+
+.nav-wrapper {
+  display: flex;
+  padding: 5px;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-left {
+  display: inline;
+  flex: 7;
+  margin-left: 2%;
+
+  a {
+    text-decoration: none;
+    text-align: center;
+    .img-navbar{
+      height: 40px;
+      width: 40px;
+      margin: auto  45px;
+      &:hover{
+        outline: none;
+      }
+    }
+  }
+}
+
+.menu-right {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-right: 3%;
+  margin-left: 40%;
+  max-width: 200px;
+  p{
+    font-size: 20px;
+    font-weight: 400;
+    font-family: "Calibri", serif;
+  }
+  img {
+    margin-left: 10px;
+    height: 25px;
+    width: 25px;
+    border: 2px solid white;
+    background-color: white;
+    border-radius: 50%;
+  }
+}

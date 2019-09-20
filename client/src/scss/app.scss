@@ -1,0 +1,12 @@
+/*variable*/
+$backgroundColor : #e5e5e5;
+/*mixin*/
+*{
+  margin: 0;
+  overflow-y: hidden;
+}
+html,body{
+  font-family: Arial, serif;
+  background-color: $backgroundColor;
+}
+
