@@ -1,7 +1,7 @@
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const dev = process.env.NODE_ENV !== 'production';
-if (dev && false) {
+if (dev) {
 	module.exports = session({
 		secret: 'hirosume',
 		saveUninitialized: false,
