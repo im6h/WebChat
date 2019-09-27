@@ -14,7 +14,6 @@ router.post('/login', function(req, res, next) {
 		if (!user) {
 			return res.status(403).send({ message: 'Đăng nhập thất bại' });
 		}
-		res.cookie("dangml", "acb");
 		req.logIn(user, function(err) {
 			if (err) {
 				return res.status(403).send({ message: 'Đăng nhập thất bại' });
@@ -47,7 +46,8 @@ router.post(
 );
 router.get('/logout', function(req, res) {
 	req.logout();
-	res.redirect('/login');
+	res.status(status.OK).send({message:'Đăng xuất thành công'})
+	// res.redirect('/login');
 });
 router.get('/search', mustAuth, async (req, res) => {
 	const text = req.query.text;
@@ -59,7 +59,7 @@ router.get('/search', mustAuth, async (req, res) => {
 	return res.send(records);
 });
 router.get('/current', mustAuth, (req, res) => {
-	const { username, fullName, avatar } = req.user;
-	res.send({ username, fullName, avatar });
-})
+	const { _id,username, fullName, avatar } = req.user;
+	res.send({ _id,username, fullName, avatar });
+});
 module.exports = router;
