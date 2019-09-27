@@ -1,20 +1,67 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-import file from './modules/file'
-import group from './modules/group'
-import message from './modules/message'
-import room from './modules/room'
-import user from './modules/user'
+import axios from 'axios';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    modules:{
-        file,
-        group,
-        message,
-        room,
-        user
+    state:{
+        authState: false,
+        authUser:{},
+        rooms:[],
+        currentRoom: {},
+    },
+    getters:{
+        getUserData: state => state.authUser,
+        isAuthorized: state => state.authState,
+
+        getRoomData: state => state.rooms,
+        getCurrentRoom: state => state.currentRoom,
+
+    },
+    mutations:{
+        // handle user
+        ASSIGN_USER_DATA:(state,payload)=>{
+            state.authUser = payload;
+        },
+        RESET_STATE: state =>{
+            state.currentUser = {};
+            state.authUser = false;
+        },
+        TOGGLE_AUTH_STATE:(state,payload)=>{
+            state.authState = payload;
+        },
+        // handle room
+        ASSIGN_ROOM_DATA: (state,payload)=>{
+            state.rooms = payload;
+        },
+        SAVE_CURRENT_ROOM:(state,payload)=>{
+            state.currentRoom = payload;
+        }
+
+    },
+    actions:{
+        // handle user
+        saveUserData:(context,payload)=>{
+            context.commit("ASSIGN_USER_DATA",payload);
+        },
+        toggleAuthState: (context,payload)=>{
+            context.commit("TOGGLE_AUTH_STATE",payload)
+        },
+        resetStateDate: context=>{
+            axios.get('/v1/user/logout')
+                .then(()=>{
+                    context.commit("RESET_STATE");
+                    localStorage.clear();
+                    router.push({name:'Login'})
+                })
+        },
+        // handle room
+        updateRoom:(context,payload)=>{
+            context.commit('ASSIGN_ROOM_DATA',payload);
+        },
+        saveCurrentRoom:(context,payload)=>{
+            context.commit('SAVE_CURRENT_ROOM',payload);
+        }
     }
 })

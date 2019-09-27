@@ -1,7 +1,7 @@
 <template>
     <div class="chat-container">
         <div class="header">
-            <img id="avatar-you" src="../../assets/logo.png" alt="">
+            <img id="avatar-you" src="../../assets/img/logo.png" alt="">
             <p>Dang vu</p>
         </div>
         <div id="line-1"></div>
@@ -14,15 +14,15 @@
                 </div>
                 <div id="line-2"></div>
                 <div class="chat-input">
-                    <img src="../../assets/baseline_insert_drive_file_black_36dp.png" alt="">
+                    <img src="../../assets/img/baseline_insert_drive_file_black_36dp.png" alt="">
                     <input type="text" placeholder="Enter message">
-                    <img src="../../assets/baseline_emoji_emotions_black_36dp.png" alt="">
+                    <img src="../../assets/img/baseline_emoji_emotions_black_36dp.png" alt="">
                     <button id="btn-send">Send</button>
                 </div>
             </div>
             <div class="option">
                 <div class="avatar-user">
-                    <img src="../../assets/logo.png" alt="">
+                    <img src="../../assets/img/logo.png" alt="">
                     <p>Dang vu</p>
                 </div>
                 <div class="info-user">
