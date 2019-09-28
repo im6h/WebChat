@@ -15,6 +15,7 @@ const upload = multer({
 	},
 	storage,
 });
+// send file 
 router.post('/', upload.single('file'), mustAuth, async (req, res) => {
 	const file = req.file;
 	const record = await fileModel.create({ ...file, uploader: req.user._id });
