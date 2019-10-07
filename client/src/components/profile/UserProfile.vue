@@ -63,7 +63,6 @@
 				.then(res => {
 						this.$store.dispatch('toggleAuthState', true);
 						this.$store.dispatch('saveUserData', res.data);
-						console.log(res.data);
 						this.user = res.data;
 					},
 				);

@@ -1,25 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-// import store from './vuex/store';
-// import axios from 'axios';
 Vue.use(Router);
-// let checkUserData = async next =>{
-// 	if (localStorage.getItem("connect.sid")){
-// 		if (store.getters.getUserData.isEmpty){
-// 			let res = axios.get('/v1/user/current');
-// 			if (res.data){
-// 				await  store.dispatch('saveUserData',res.data);
-// 				await  store.dispatch('toggleAuthState',true);
-//
-// 				next();
-// 			}else{
-// 				next();
-// 			}
-// 		}else{
-// 			next()
-// 		}
-// 	}
-// };
 const router = new Router({
 	mode: 'history',
 	routes: [
@@ -59,9 +40,24 @@ const router = new Router({
 				requiresAuth: false,
 			},
 		},
-
-
-		// handle with user
+		{
+			path:'/messages',
+			name:'Messages',
+			component: ()=> import('./components/messages/Messages.vue'),
+			meta:{
+				requiresAuth:true,
+			}
+		},
+		{
+			path:'/room/:handle',
+			name:'Room',
+			component:()=> import('./components/messages/MessageDetail.vue'),
+			meta:{
+				requiresAuth:true,
+				transitionName: 'router-anim',
+				enterActive:'animated fadeIn'
+			}
+		},
 		{
 			path:'/user/:handle',
 			name:'UserProfile',
@@ -72,31 +68,7 @@ const router = new Router({
 				enterActive: 'animated fadeIn'
 			}
 		},
-		{
-			path:'/room',
-			name:'RoomList',
-			component:()=> import('./components/room/RoomList.vue'),
-			meta:{
-				requiresAuth:true,
-				transitionName: 'router-anim',
-				enterActive: 'animated fadeIn'
-			}
-		},
+
 	],
 });
-// router.beforeEach(async (to,from,next)=>{
-// 	await  checkUserData(next);
-// 	if (to.meta.requiresAuth){
-// 		if (localStorage.getItem("connect.sid")=== null){
-// 			localStorage.clear();
-// 			next({
-// 				name:'Login',
-// 			})
-// 		}else{
-// 			next();
-// 		}
-// 	}else{
-// 		next();
-// 	}
-// });
 export default router;

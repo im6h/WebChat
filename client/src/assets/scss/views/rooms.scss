@@ -3,13 +3,11 @@
 .rooms {
   background: $primary-container-background;
   box-shadow: $primary-container-box-shadow;
-  width: 60%;
   max-width: 600px;
-  margin: 1rem auto;
-
+  overflow-x: auto;
 
   &__header {
-    padding: 1rem 0;
+    padding:  1px 0;
   }
 
   &__details {
@@ -33,9 +31,8 @@
   &__list {
     margin: 0;
     padding: 0 1rem;
-    height: 500px;
-    max-height: 500px;
-    overflow: auto;
+    height:700px;
+
 
     &-item {
       list-style: none;
@@ -84,8 +81,7 @@
   }
 
   &__actions {
-    padding: 1rem;
-
+    padding: 1rem 1rem 0px;
     width: 100%;
 
   }

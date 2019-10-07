@@ -9,6 +9,7 @@ export default new Vuex.Store({
         authState: false,
         authUser:{},
         rooms:[],
+        messagesInRoom:[],
         currentRoom: {},
     },
     getters:{
@@ -17,6 +18,8 @@ export default new Vuex.Store({
 
         getRoomData: state => state.rooms,
         getCurrentRoom: state => state.currentRoom,
+
+        getMessagesInRoom: state => state.messagesInRoom,
 
     },
     mutations:{
@@ -37,6 +40,10 @@ export default new Vuex.Store({
         },
         SAVE_CURRENT_ROOM:(state,payload)=>{
             state.currentRoom = payload;
+        },
+
+        MESSAGES_IN_ROOM:(state,payload)=>{
+            state.messagesInRoom = payload;
         }
 
     },
@@ -62,6 +69,14 @@ export default new Vuex.Store({
         },
         saveCurrentRoom:(context,payload)=>{
             context.commit('SAVE_CURRENT_ROOM',payload);
+        },
+
+        fetchMessages:(context,payload) =>{
+            axios.get(`/v1/message/${payload}`)
+                .then((res)=>{
+                    console.log(payload);
+                    context.commit('MESSAGES_IN_ROOM',res.data);
+                })
         }
     }
 })

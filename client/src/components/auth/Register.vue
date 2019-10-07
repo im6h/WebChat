@@ -10,7 +10,7 @@
                 </div>
                 <form @submit.prevent="handleSubmit" class="form">
                     <div class="form__input-group">
-<!--                        <ion-icon name="pricetags" class="form__icon"></ion-icon>-->
+                        <!--                        <ion-icon name="pricetags" class="form__icon"></ion-icon>-->
                         <input
                                 type="text"
                                 name="username"
@@ -22,7 +22,7 @@
                         <label for="username" class="form__label">Username</label>
                     </div>
                     <div class="form__input-group">
-<!--                        <ion-icon name="person" class="form__icon"></ion-icon>-->
+                        <!--                        <ion-icon name="person" class="form__icon"></ion-icon>-->
                         <input
                                 type="text"
                                 name="fullName"
@@ -34,7 +34,7 @@
                         <label for="fullName" class="form__label">FullName</label>
                     </div>
                     <div class="form__input-group">
-<!--                        <ion-icon name="lock" class="form__icon"></ion-icon>-->
+                        <!--                        <ion-icon name="lock" class="form__icon"></ion-icon>-->
                         <input
                                 type="password"
                                 name="password"
@@ -60,57 +60,53 @@
 </template>
 
 <script>
-    import Error from '../error/Error.vue';
-    import axios from 'axios';
-    import {mapActions} from 'vuex';
-
-    export default {
-        name: "register",
-        components:{
-            Error
-        },
+	import Error from '../error/Error.vue';
+	import axios from 'axios';
+	import {mapActions} from 'vuex';
+	export default {
+		name: "register",
+		components:{
+			Error
+		},
 		props: ['message'],
-        data:function() {
-            return {
-                user: {
-                    username: '',
-                    fullName: '',
-                    password: ''
-                },
+		data:function() {
+			return {
+				user: {
+					username: '',
+					fullName: '',
+					password: ''
+				},
 				errorMessage: this.message,
 				errors: [],
-            }
-        },
-        methods: {
-            ...mapActions(['saveUserData','toggleAuthState']),
-            handleSubmit(){
-                this.errors = [];
-                let config = {
-                    method:'post',
-                    url: '/v1/user/logon',
-                    data: this.user,
-                };
-                if (this.user.username && this.user.fullName && this.user.password){
-                	axios(config)
-                        .then((res)=>{
-                        	console.log(res.data);
-                        	if (res.data.errors){
-                        		console.log(res.data.errors);
-                            }else{
-                        		this.$store.dispatch('toggleAuthState',true);
+			}
+		},
+		methods: {
+			...mapActions(['saveUserData','toggleAuthState']),
+			handleSubmit(){
+				this.errors = [];
+				let config = {
+					method:'post',
+					url: '/v1/user/logon',
+					data: this.user,
+				};
+				if (this.user.username && this.user.fullName && this.user.password){
+					axios(config)
+						.then((res)=>{
+							console.log(res.data);
+							if (res.data.errors){
+								console.log(res.data.errors);
+							}else{
+								this.$store.dispatch('toggleAuthState',true);
 								this.$store.dispatch('saveUserData',res.data);
 								this.$router.push({
-									name:'UserProfile',
-									params:{
-										handle:res.data.user.username,
-									}
-                                })
-                            }
-                        });
-                }
-            }
-        }
-    }
+									name:'Messages'
+								})
+							}
+						});
+				}
+			}
+		}
+	}
 </script>
 
 <style scoped lang="scss">

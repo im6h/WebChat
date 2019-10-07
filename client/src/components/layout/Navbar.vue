@@ -12,7 +12,7 @@
                     <router-link to="/about" class="nav__link">About</router-link>
                 </li>
             </ul>
-            <ul class="navbar__nav navbar__nav--right" >
+            <ul class="navbar__nav navbar__nav--right">
                 <li class="nav__item">
                     <router-link to="/login" class="nav__link nav__link--rounded">Login</router-link>
                 </li>
@@ -25,9 +25,16 @@
             <div class="navbar__brand">
                 <router-link to="/" class="navbar__textbrand">Astro Chat</router-link>
             </div>
-            <ul class="navbar__nav navbar__nav--right" >
+            <ul class="navbar__nav">
                 <li class="nav__item">
-                    <router-link :to="{name:'UserProfile',params:{handle:user.username}}" class="nav__link nav__link--rounded">{{user.username}}</router-link>
+                    <router-link to="/messages" class="nav__link">Messages</router-link>
+                </li>
+            </ul>
+            <ul class="navbar__nav navbar__nav--right">
+                <li class="nav__item">
+                    <router-link :to="{name:'UserProfile',params:{handle:getUserData.username}}"
+                                 class="nav__link nav__link--rounded">{{getUserData.username}}
+                    </router-link>
                 </li>
                 <li class="nav__item">
                     <button @click.prevent="logout" class="nav__link nav__link--rounded nav__link--btn">Logout</button>
@@ -38,7 +45,8 @@
 </template>
 <script>
 	import { mapActions, mapGetters } from 'vuex';
-    import axios from 'axios';
+	import axios from 'axios';
+
 	export default {
 		name: 'Navbar',
 		data: function() {
@@ -47,36 +55,39 @@
 			};
 		},
 		computed: {
-			...mapGetters(
-				[
-					'getUserData',
-					'isAuthorized',
-				],
-			),
-			user() {
-				return this.getUserData;
-			},
+			...mapGetters(['getUserData', 'isAuthorized']),
 		},
 		methods: {
 			...mapActions(['toggleAuthState']),
 			logout() {
 				let config = {
-					method:'get',
-                    url:'/v1/user/logout'
-                };
+					method: 'get',
+					url: '/v1/user/logout',
+				};
 				axios(config)
-                    .then(res=>{
-						if (res.status === 200){
+					.then(res => {
+						if (res.status === 200) {
 							localStorage.clear();
 							this.$store.dispatch('toggleAuthState', false);
 							this.$router.push({
 								name: 'Login',
 							});
-                        }
+						}
 					});
 			},
 		},
-
+		created() {
+			let config = {
+				method: 'get',
+				url: '/v1/user/current',
+			};
+			axios(config)
+				.then(res => {
+					this.$store.dispatch('toggleAuthState', true);
+					this.$store.dispatch('saveUserData', res.data);
+					this.user = res.data;
+				});
+		},
 	};
 </script>
 <style lang="scss" scoped>
