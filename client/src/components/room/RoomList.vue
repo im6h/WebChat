@@ -1,49 +1,46 @@
 <template>
     <div class="page roomList">
         <section class="section section--mmt mb-3">
-            <div class="section__heading mt-6">
-                <span class="section__title">Room List</span>
-            </div>
             <div class="section__content">
                 <Error :errorMessage="errorMessage"/>
-                <p class="section__lead">Enter a room and start chatting!</p>
                 <div class="rooms" v-if="rooms">
+                    <div class="rooms__actions">
+                        <a @click="createRoom" class="btn btn--info">Create Room</a>
+                        <a @click="fetchRoomData" class="btn btn--info">Refresh Rooms</a>
+                    </div>
                     <div class="rooms__header">
                         <input
                                 type="text"
                                 class="rooms__search-input"
                                 placeholder="Search | Enter 'my_rooms' for a list of your created rooms"
-                                v-model="searchInput"
+                                v-model.trim="searchInput"
                         >
                     </div>
-<!--                    <transition name="slideDown">-->
-<!--                        <ul class="rooms__list">-->
-<!--                            <transition-group name="slideUp" v-if="filteredRooms.length > 0">-->
-<!--                                <li-->
-<!--                                        v-for="room in filteredRooms"-->
-<!--                                        :key="room._id"-->
-<!--                                        class="rooms__list-item"-->
-<!--                                >-->
-<!--                                    <a-->
-<!--                                            :href="`room/${room._id}`"-->
-<!--                                            class="rooms__list-item-link"-->
-<!--                                            @click.prevent="handleRoomClick(room)"-->
-<!--                                    >-->
-<!--                                        <div class="rooms__item-container">-->
-<!--                                            <div class="rooms__item-details">-->
-<!--                                                <p>{{ room.name }}</p>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </transition-group>-->
-<!--                            <span v-else>No Rooms</span>-->
-<!--                        </ul>-->
-<!--                    </transition>-->
-                    <div class="rooms__actions">
-                        <a @click="openModal" class="btn btn--info">Create Room</a>
-                        <a @click="fetchRoomData" class="btn btn--info">Refresh Rooms</a>
-                    </div>
+                    <transition name="slideDown">
+                        <ul class="rooms__list">
+                            <transition-group name="slideUp" v-if="rooms.length > 0">
+                                <li
+                                        v-for="room in rooms"
+                                        :key="room._id"
+                                        class="rooms__list-item"
+                                >
+                                    <a
+                                            :href="`room/${room._id}`"
+                                            class="rooms__list-item-link"
+                                            @click.prevent="handleRoomClick(room)"
+                                    >
+                                        <div class="rooms__item-container">
+                                            <div class="rooms__item-details">
+                                                <p>{{ room.avatar }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </transition-group>
+                            <span v-else>No Rooms</span>
+                        </ul>
+                    </transition>
+
                 </div>
             </div>
         </section>
@@ -52,46 +49,96 @@
 
 <script>
 	import axios from 'axios';
-
-	import Error from '../error/Error.vue';
-
 	import { mapActions, mapGetters } from 'vuex';
+	import Error from '../../components/error/Error.vue';
 
 	export default {
 		name: 'RoomList',
-        props:['message'],
+		props: ['message'],
 		components: {
 			Error,
 		},
 		data: function() {
-            return{
-            	errorMessage: this.message,
-                searchInput:'',
-                rooms:[],
-            }
+			return {
+				rooms: [],
+				room_name: null,
+				privateRoomName: null,
+				password: null,
+				privateRoomPassword: null,
+				searchInput: '',
+				errorMessage: this.message,
+				errors: [],
+			};
 		},
 		computed: {
-			...mapGetters({}),
-			filteredRooms(){
-
-            }
-        },
+			...mapGetters({
+				getUserData: 'getUserData',
+				getRoomData: 'getRoomData',
+			}),
+		},
 		methods: {
-			handleRoomClick(room){
+			...mapActions(['updateRoomData', 'addRoom', 'deleteRoom', 'saveCurrentRoom']),
+			filteredRooms() {
 
-            },
-            openModal(){
+			},
+			handleRoomClick(room) {
+				this.$store.dispatch('saveCurrentRoom', room)
+					.catch(err => {
+						console.log(err);
+					});
+				this.$router.push({
+					name: 'Room',
+					params: {
+						handle: room._id,
+					},
+				});
 
-            },
-            fetchRoomData(){
+			},
+			handleDelete() {
 
-            }
-        },
-		created() {
+			},
+			createRoom() {
+				let config = {
+					url: '/v1/group',
+					method: 'post',
+					data: {
+						'userId': this.getUserData._id,
+						'members': [
+							this.getUserData._id,
+						],
+					},
+				};
+				axios(config)
+					.then(res => {
+						console.log(res);
+
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			},
+			fetchRoomData() {
+				axios.get('/v1/room')
+					.then(res => {
+						this.rooms = res.data;
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			},
+		},
+		mounted() {
+			this.fetchRoomData();
+			if (this.errorMessage) {
+				setTimeout(() => {
+					this.errorMessage = '';
+				}, 1500);
+			}
 		},
 	};
 </script>
 
-<style scoped lang="scss">
-    @import "../../assets/scss/views/rooms";
+<style lang="scss">
+    @import '../../assets/scss/views/rooms.scss';
+
 </style>

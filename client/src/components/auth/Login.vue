@@ -52,7 +52,6 @@
 	import axios from 'axios';
 	import Error from '../error/Error.vue';
 	import { mapActions } from 'vuex';
-
 	export default {
 		name: 'login',
 		props: ['message'],
@@ -68,7 +67,6 @@
 				errorMessage: this.message,
 				errors: [],
 			};
-
 		},
 		methods: {
 			...mapActions(['saveUserData']),
@@ -86,18 +84,13 @@
 								this.$store.dispatch('toggleAuthState', true);
 								this.$store.dispatch('saveUserData', res.data);
 								this.$router.push({
-									name: 'UserProfile',
-									params: {
-										handle: res.data.username,
-									},
+									name: 'Messages',
 								});
 							}
 						});
 				}
-
 			},
 		},
-
 	};
 </script>
 

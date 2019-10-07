@@ -1,4 +1,4 @@
-<template >
+<template>
     <div class="page home">
         <section class="section section__landing">
             <div class="section__heading">
@@ -24,7 +24,6 @@
                         </span>
                     </div>
                 </div>
-
             </div>
         </section>
     </div>
@@ -37,7 +36,7 @@
 		props: [],
 		components: {},
 		mounted() {
-		}
+		},
 	};
 </script>
 
