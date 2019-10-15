@@ -6,6 +6,7 @@ const status = require('http-status');
 const { query } = require('express-validator');
 const reqValidate = require('../middlewares/validate-req');
 const roomHelper = require('../utils/room');
+// get list rooms
 router.get('/', mustAuth, async (req, res) => {
 	const user = req.user;
 	const records = await roomModel
@@ -18,7 +19,7 @@ router.get('/', mustAuth, async (req, res) => {
 		records.map(r => ({ ...r, ...roomHelper.getRoomAliasAndAvt(r, user.username) })),
 	);
 });
-
+// get detail room
 router.get('/info/:id', mustAuth, async (req, res) => {
 	const { id } = req.params;
 	const user = req.user;
@@ -68,6 +69,7 @@ function _getFriendId(members, userId) {
 function _getInfo(id) {
 	return userModel.findById(id, 'username fullName avatar').lean();
 }
+// search room with text
 router.get(
 	'/search',
 	mustAuth,

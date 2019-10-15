@@ -5,6 +5,8 @@ const validateReq = require('../middlewares/validate-req');
 const messageModel = require('../models/message');
 const roomModel = require('../models/room');
 const status = require('http-status');
+
+// get all message from current room
 router.get('/:roomId', [param('roomId').isMongoId()], validateReq, mustAuth, async (req, res) => {
 	const roomId = req.params.roomId;
 	const user = req.user;
