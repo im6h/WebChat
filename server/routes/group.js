@@ -4,6 +4,7 @@ const roomModel = require('../models/room');
 const validateReq = require('../middlewares/validate-req');
 const userModel = require('../models/user');
 const { body } = require('express-validator');
+// create group
 router.post('/', mustAuth, async (req, res) => {
 	const user = req.user;
 	const userId = user._id;
@@ -22,6 +23,7 @@ router.post('/', mustAuth, async (req, res) => {
 	}
 	res.send(id);
 });
+// invite user to current room
 router.post(
 	'/invite',
 	mustAuth,
@@ -56,6 +58,7 @@ router.post(
 		}
 	},
 );
+// remove user from current room
 router.put(
 	'/remove/',
 	mustAuth,
