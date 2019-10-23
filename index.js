@@ -7,23 +7,13 @@ const logger = require('morgan');
 const http = require('http');
 const passport = require('passport');
 const port = process.env.PORT || 3000;
-const onlyServer = process.env.OS === 'true';
-const next = require('next');
-const app = next({ dev, dir: './client' });
-const handle = app.getRequestHandler();
 require('./server/models')();
 require('./server/passport/localStrategy')();
 const sessionParser = require('./server/shareds/sessionParser');
-if (onlyServer) {
-	_init();
-} else {
-	app.prepare().then(() => {
-		_init();
-	});
-}
+
+_init();
 function _init() {
 	const expressServer = _initExpress();
-	expressServer.nextApp = app;
 	const httpServer = http.createServer(expressServer);
 	const wss = require('./server/libs/socket').init(httpServer);
 	require('./server/socket')(wss);
@@ -50,7 +40,6 @@ function _initBaseMiddleware(server) {
 }
 function _initRouter(server) {
 	server.use('/v1', require('./server/routes'));
-	require('./server/routes/next')(server, app);
 	server.get('*', (req, res) => {
 		return handle(req, res);
 	});

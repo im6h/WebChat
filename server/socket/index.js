@@ -12,6 +12,7 @@ const commonUtil = require('./utils/common');
 module.exports = wss => {
 	wss.useWLM(onlineRecordMiddleware);
 	wss.useHLM(authMiddleware);
+	console.log('init socket');
 	wss.onEvent('connection', async ws => {
 		await socketUtil.joinAllRoom(ws);
 		ws.onEvent(EventType.MESSAGE, async data => {

@@ -19,7 +19,6 @@ router.post('/login', function(req, res, next) {
 			if (err) {
 				return res.status(403).send({ message: 'Đăng nhập thất bại' });
 			}
-			console.log(req.session)
 			res.send({ username: user.username, fullName: user.fullName, avatar: user.avatar });
 		});
 	})(req, res, next);
@@ -46,7 +45,7 @@ router.post(
 		return res.send({ message: 'Đăng kí thành công ' });
 	},
 );
-// logout 
+// logout
 router.get('/logout', function(req, res) {
 	req.logout();
 	res.status(status.OK).send({message:'Đăng xuất thành công'})
