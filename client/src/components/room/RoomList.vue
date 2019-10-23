@@ -37,7 +37,7 @@
                                     </a>
                                 </li>
                             </transition-group>
-                            <span v-else>No Rooms</span>
+                            <span v-else>No rooms</span>
                         </ul>
                     </transition>
 
@@ -73,25 +73,22 @@
 		computed: {
 			...mapGetters({
 				getUserData: 'getUserData',
-				getRoomData: 'getRoomData',
+				// rooms : 'getRoomData'
 			}),
 		},
 		methods: {
-			...mapActions(['updateRoomData', 'addRoom', 'deleteRoom', 'saveCurrentRoom']),
+			// ...mapActions(['updateRoomData', 'addRoom', 'deleteRoom', 'saveCurrentRoom']),
 			filteredRooms() {
 
 			},
 			handleRoomClick(room) {
-				this.$store.dispatch('saveCurrentRoom', room)
-					.catch(err => {
-						console.log(err);
-					});
+				this.$store.dispatch('saveCurrentRoom', room);
 				this.$router.push({
-					name: 'Room',
+					name: 'ChatDetail',
 					params: {
 						handle: room._id,
 					},
-				});
+				}).catch(err => err);
 
 			},
 			handleDelete() {
@@ -121,13 +118,18 @@
 				axios.get('/v1/room')
 					.then(res => {
 						this.rooms = res.data;
+						this.$store.dispatch('updateRoom', res.data);
+						this.$store.dispatch('saveCurrentRoom',res.data[0]);
+						// let firstRoom = res.data[0];
+						// this.$store.dispatch('saveCurrentRoom')
 					})
 					.catch(err => {
 						console.log(err);
 					});
 			},
+
 		},
-		mounted() {
+		created: function() {
 			this.fetchRoomData();
 			if (this.errorMessage) {
 				setTimeout(() => {

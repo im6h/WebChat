@@ -99,7 +99,7 @@
 								this.$store.dispatch('toggleAuthState',true);
 								this.$store.dispatch('saveUserData',res.data);
 								this.$router.push({
-									name:'Messages'
+									name:'Chat'
 								})
 							}
 						});

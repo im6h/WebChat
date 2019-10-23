@@ -12,6 +12,8 @@
 <script>
 	import RoomList from '../room/RoomList';
 	import Room from '../room/Room';
+	import { getConnection } from '../../utils/websocket';
+	import axios from 'axios';
 
 	export default {
 		name: 'MessagesDetail',
@@ -19,6 +21,33 @@
 			RoomList,
 			Room,
 		},
+		data: function() {
+			return {
+				roomId: this.$route.params.handle,
+			};
+		},
+		computed: {
+
+		},
+		methods: {
+		    currentRoom(){
+		    	let config = {
+		    		method:'get',
+                    url:`/v1/room/info/${this.roomId}`
+                }
+                axios(config)
+                    .then(res=>{
+                        this.$store.dispatch('saveCurrentRoom',res.data);
+                    })
+                    .catch(err => err)
+            }
+        },
+        beforeUpdate(){
+            this.currentRoom();
+        },
+		created: function() {
+			getConnection();
+        },
 	};
 </script>
 
