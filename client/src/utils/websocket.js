@@ -14,7 +14,7 @@ import Emitter from './socketEmitter';
 
 function url() {
 	const l = window.location;
-	return (l.protocol === 'https:' ? 'wss://' : 'ws://') + "127.0.0.1:" + "8080" + l.pathname;
+	return (l.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:" + "8080" + l.pathname;
 }
 
 export let connection;
