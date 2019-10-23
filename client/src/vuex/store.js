@@ -74,7 +74,6 @@ export default new Vuex.Store({
         fetchMessages:(context,payload) =>{
             axios.get(`/v1/message/${payload}`)
                 .then((res)=>{
-                    console.log(payload);
                     context.commit('MESSAGES_IN_ROOM',res.data);
                 })
         }

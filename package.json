@@ -63,7 +63,7 @@
 		"universal-rxjs-ajax": "^2.0.2",
 		"url-metadata": "^2.4.0",
 		"validator": "^11.1.0",
-		"websocket": "^1.0.29",
+		"websocket": "^1.0.30",
 		"ws": "^7.1.2"
 	},
 	"devDependencies": {

@@ -41,17 +41,17 @@ const router = new Router({
 			},
 		},
 		{
-			path:'/messages',
-			name:'Messages',
-			component: ()=> import('./components/messages/Messages.vue'),
+			path:'/chat',
+			name:'Chat',
+			component: ()=> import('./components/chat/Chat.vue'),
 			meta:{
 				requiresAuth:true,
 			}
 		},
 		{
-			path:'/room/:handle',
-			name:'Room',
-			component:()=> import('./components/messages/MessageDetail.vue'),
+			path:'/chat/:handle',
+			name:'ChatDetail',
+			component:()=> import('./components/chat/ChatDetail.vue'),
 			meta:{
 				requiresAuth:true,
 				transitionName: 'router-anim',

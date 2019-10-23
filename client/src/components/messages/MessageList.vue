@@ -27,8 +27,12 @@
 		computed: {
 			...mapGetters(['getUserData']),
 		},
+        watch:{
+
+        },
 		methods: {},
 		created() {
+
 		},
 	};
 </script>

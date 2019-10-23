@@ -27,7 +27,7 @@
             </div>
             <ul class="navbar__nav">
                 <li class="nav__item">
-                    <router-link to="/messages" class="nav__link">Messages</router-link>
+                    <router-link to="/chat" class="nav__link">Chat</router-link>
                 </li>
             </ul>
             <ul class="navbar__nav navbar__nav--right">
@@ -56,6 +56,22 @@
 		},
 		computed: {
 			...mapGetters(['getUserData', 'isAuthorized']),
+			getCurrentUser: function() {
+				if (!this.isAuthorized) {
+					let config = {
+						method: 'get',
+						url: '/v1/user/current',
+					};
+					axios(config)
+						.then(res => {
+							if (res) {
+								this.$store.dispatch('toggleAuthState', true);
+								this.$store.dispatch('saveUserData', res.data);
+								this.user = res.data;
+							}
+						}).catch(err => err);
+				}
+			},
 		},
 		methods: {
 			...mapActions(['toggleAuthState']),
@@ -73,20 +89,11 @@
 								name: 'Login',
 							});
 						}
-					});
+					}).catch(err => err);
 			},
 		},
 		created() {
-			let config = {
-				method: 'get',
-				url: '/v1/user/current',
-			};
-			axios(config)
-				.then(res => {
-					this.$store.dispatch('toggleAuthState', true);
-					this.$store.dispatch('saveUserData', res.data);
-					this.user = res.data;
-				});
+			this.getCurrentUser;
 		},
 	};
 </script>
