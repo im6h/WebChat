@@ -25,6 +25,7 @@ class ChatSocketServer extends WebSocketServer {
 		this.on('connection', ws => {
 			ws.initExtension();
 			this._runWlm(ws, err => {
+				console.log('connected', err);
 				if (err) return ws.close();
 				this.eventer.emit('connection', ws);
 				this._initSocketEvent(ws);
@@ -51,9 +52,11 @@ class ChatSocketServer extends WebSocketServer {
 	}
 	_hlmMiddleware() {
 		this.server.on('upgrade', (req, socket, head) => {
+			console.log('on upgrade');
 			const mapping = {};
 			this._runHlm(req, socket, mapping, err => {
 				if (err) {
+					console.log(err);
 					return socket.destroy();
 				}
 				this.handleUpgrade(req, socket, head, ws => {
