@@ -1,15 +1,17 @@
 <template>
     <div class="page__message">
         <section class="page__left">
+            <RoomList></RoomList>
         </section>
     </div>
 </template>
 
 <script>
-    import axios from 'axios';
+	import axios from 'axios';
 	import RoomList from '../room/RoomList';
 	import Room from '../room/Room';
-    import {getConnection} from '../../utils/websocket';
+	import { getConnection } from '../../utils/websocket';
+
 
 	export default {
 		name: 'Chat',
@@ -17,11 +19,10 @@
 			RoomList,
 			Room,
 		},
-        data: function() {
-            return{
-            }
+		data: function() {
+			return {};
 		},
-        methods:{
+		methods: {
 			currentRoom() {
 				let roomId = this.$route.params.handle;
 				let config = {
@@ -34,20 +35,21 @@
 					})
 					.catch(err => err);
 			},
-        },
-        created:function(){
-            axios.get('/v1/room')
-                .then(res=>{
-                	// this.$store.commit('updateRoom',res.data);
-                	this.$router.push({
-                        name:'ChatDetail',
-                        params:{
-                        	handle:res.data[0]._id
-                        }
-                    })
-                })
-                .catch(err=>err);
-        }
+		},
+		created: function() {
+			axios.get('/v1/room')
+				.then(res => {
+					// this.$store.commit('updateRoom',res.data);
+					this.$router.push({
+						name: 'ChatDetail',
+						params: {
+							handle: res.data[0]._id,
+						},
+					});
+				})
+				.catch(err => err);
+			getConnection();
+		},
 	};
 </script>
 
