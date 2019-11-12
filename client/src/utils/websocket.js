@@ -39,7 +39,6 @@ export function getConnection() {
 	connection.dispose = () => emitter.dispose();
 	connection.off = event => emitter.off(event);
 	connection.onopen = function() {
-		console.log('Thanh cong');
 		if (queue.length) {
 			const temp = queue;
 			queue = [];

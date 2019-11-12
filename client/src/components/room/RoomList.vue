@@ -3,7 +3,7 @@
         <section class="section section--mmt mb-3">
             <div class="section__content">
                 <Error :errorMessage="errorMessage"/>
-                <div class="rooms" v-if="rooms">
+                <div class="rooms">
                     <div class="rooms__actions">
                         <a @click="createRoom" class="btn btn--info">Create Room</a>
                         <a @click="fetchRoomData" class="btn btn--info">Refresh Rooms</a>
@@ -49,7 +49,7 @@
 
 <script>
 	import axios from 'axios';
-	import { mapActions, mapGetters } from 'vuex';
+	import { mapGetters } from 'vuex';
 	import Error from '../../components/error/Error.vue';
 
 	export default {

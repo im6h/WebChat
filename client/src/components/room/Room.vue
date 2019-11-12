@@ -9,7 +9,7 @@
                             <div class="chat__actions">
                             </div>
                         </div>
-                        <MessageList :messages="messages"/>
+                        <MessageList :messages="getMessagesInRoom"/>
                         <transition name="slideDown">
                             <div class="chat__utyping" v-show="usersTyping.length > 0">
                                 <span>{{  }}</span>
@@ -24,10 +24,9 @@
 </template>
 
 <script>
-	import axios from 'axios';
 	import MessageInput from '../messages/MessageInput';
 	import MessageList from '../messages/MessageList';
-	import { mapGetters, mapActions } from 'vuex';
+	import { mapGetters } from 'vuex';
 
 	export default {
 		name: 'Room',
@@ -39,13 +38,15 @@
 			return {
 				usersTyping: '',
 				messages: [],
-				roomId: this.$route.params.handle,
 			};
 		},
 		computed: {
-			...mapGetters(['getUserData', 'getMessagesInRoom','getCurrentRoom']),
+			...mapGetters(['getUserData', 'getMessagesInRoom', 'getCurrentRoom']),
 		},
-        methods:{},
+		methods: {},
+		created() {
+
+		},
 
 	};
 </script>
