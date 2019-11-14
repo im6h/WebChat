@@ -27,8 +27,9 @@
 	import MessageInput from '../messages/MessageInput';
 	import MessageList from '../messages/MessageList';
 	import { mapGetters } from 'vuex';
+    import {getConnection} from "../../utils/websocket";
 
-	export default {
+    export default {
 		name: 'Room',
 		components: {
 			MessageInput,
@@ -45,12 +46,16 @@
 		},
 		methods: {},
 		created() {
-
+            let roomId = this.$route.params.handle;
+            this.$store.dispatch('fetchMessages', roomId);
+            getConnection().onopen();
 		},
 
 	};
 </script>
 
 <style scoped lang="scss">
-
+    .page {
+        overflow: hidden;
+    }
 </style>

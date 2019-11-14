@@ -40,9 +40,10 @@
             }
         },
         beforeUpdate(){
-            this.currentRoom();
+            // this.currentRoom();
         },
 		created: function() {
+
         },
 	};
 </script>
@@ -53,7 +54,8 @@
         margin-right: 0;
         display: flex;
         flex-direction: row;
-        min-height: 85vh;
+        height: 93vh;
+        overflow: hidden;
     }
 
     .page__left {
@@ -64,5 +66,6 @@
 
     .page__right {
         width: 70%;
+        overflow-y: scroll;
     }
 </style>

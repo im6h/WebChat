@@ -73,14 +73,9 @@
 		computed: {
 			...mapGetters({
 				getUserData: 'getUserData',
-				// rooms : 'getRoomData'
 			}),
 		},
 		methods: {
-			// ...mapActions(['updateRoomData', 'addRoom', 'deleteRoom', 'saveCurrentRoom']),
-			filteredRooms() {
-
-			},
 			handleRoomClick(room) {
 				this.$store.dispatch('saveCurrentRoom', room);
 				this.$router.push({
@@ -89,9 +84,6 @@
 						handle: room._id,
 					},
 				}).catch(err => err);
-
-			},
-			handleDelete() {
 
 			},
 			createRoom() {
@@ -120,8 +112,6 @@
 						this.rooms = res.data;
 						this.$store.dispatch('updateRoom', res.data);
 						this.$store.dispatch('saveCurrentRoom',res.data[0]);
-						// let firstRoom = res.data[0];
-						// this.$store.dispatch('saveCurrentRoom')
 					})
 					.catch(err => {
 						console.log(err);
@@ -131,11 +121,6 @@
 		},
 		created: function() {
 			this.fetchRoomData();
-			if (this.errorMessage) {
-				setTimeout(() => {
-					this.errorMessage = '';
-				}, 1500);
-			}
 		},
 	};
 </script>
