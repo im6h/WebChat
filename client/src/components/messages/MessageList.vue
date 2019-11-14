@@ -1,20 +1,6 @@
 <template>
-    <div class="messagesList" v-if="messages.length !== 0">
+    <div class="messagesList" id="list" ref="list">
         <div class="message" v-for="message in messages" :key="message._id">
-            <div class="item__right" v-if="message.sender === getUserData.username">
-                <div class="item__content">
-                    <span>{{ message.content }}</span>
-                </div>
-            </div>
-            <div class="message__item__left" v-else>
-                <div class="item__content">
-                    <span>{{ message.content }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="messagesList" v-else>
-        <div class="message" v-for="message in getMessage" :key="message._id">
             <div class="item__right" v-if="message.sender === getUserData.username">
                 <div class="item__content">
                     <span>{{ message.content }}</span>
@@ -30,33 +16,43 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex';
-	import axios from 'axios';
-	export default {
-		name: 'MessageList',
-		props: ['messages'],
-		data: function() {
-			return {
-				getMessage: [],
-			};
-		},
-		computed: {
-			...mapGetters(['getUserData', 'getMessagesInRoom']),
-		},
-		methods: {},
-		created() {
-			const roomId = this.$route.params.handle;
-			let config = {
-				method: 'get',
-				url: `/v1/message/${roomId}`,
-			};
-			axios(config)
-				.then(res => {
-					this.getMessage = res.data;
-				})
-				.catch(err => err);
-		},
-	};
+    import {mapGetters} from 'vuex';
+    import axios from 'axios';
+
+    export default {
+        name: 'MessageList',
+        props: ['messages'],
+        data: function () {
+            return {
+                getMessage: [],
+            };
+        },
+        computed: {
+            ...mapGetters(['getUserData', 'getMessagesInRoom']),
+            fetchMessageInRoom: function () {
+                const roomId = this.$route.params.handle;
+                let config = {
+                    method: 'get',
+                    url: `/v1/message/${roomId}`
+                };
+                if (this.getMessagesInRoom.length === 0) {
+                    axios(config).then(res => {
+                        this.$store.commit('MESSAGES_IN_ROOM', res.data);
+                    }).catch(err => console.log(err));
+                }
+            }
+        },
+        methods: {},
+        created() {
+            this.fetchMessageInRoom;
+
+        },
+        updated() {
+            let container = this.$refs.list;
+            // console.log(container);
+            container.scrollTop = container.scrollHeight;
+        }
+    };
 </script>
 
 <style scoped lang="scss">
@@ -66,11 +62,9 @@
         padding: 0;
         display: inline-flex;
         flex-direction: column;
-        border-bottom: 1px white solid;
         height: 77vh;
         overflow-x: auto;
-        width: 100%;
-        overflow-y: auto;
+        width: 97%;
     }
 
     .message {
@@ -87,7 +81,6 @@
         padding: 0.5rem;
         border-radius: 8px;
         text-align: left;
-        margin: 0 3rem;
         justify-content: flex-end;
         font-family: 'Work Sans';
         white-space: pre-line;

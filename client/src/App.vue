@@ -9,13 +9,11 @@
         >
             <router-view/>
         </transition>
-        <Footer></Footer>
     </div>
 </template>
 <script>
 	import { mapActions } from 'vuex';
 	import Navbar from './components/layout/Navbar.vue';
-	import Footer from './components/layout/Footer.vue';
 
 	const DEFAULT_TRANSITION = 'fade';
 	const DEFAULT_ENTER_ACTIVE_CLASS = 'animated fadeIn';
@@ -23,8 +21,7 @@
 	export default {
 		name: 'App',
 		components: {
-			Navbar: Navbar,
-			Footer: Footer,
+            Navbar
 
 		},
 		data: function() {

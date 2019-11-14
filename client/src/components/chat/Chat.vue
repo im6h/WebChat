@@ -10,7 +10,6 @@
 	import axios from 'axios';
 	import RoomList from '../room/RoomList';
 	import Room from '../room/Room';
-	import { getConnection } from '../../utils/websocket';
 
 
 	export default {
@@ -48,7 +47,6 @@
 					});
 				})
 				.catch(err => err);
-			getConnection();
 		},
 	};
 </script>

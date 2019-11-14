@@ -11,15 +11,16 @@
                 </div>
             </div>
         </section>
+        <Footer></Footer>
     </div>
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
-
+    import Footer from "../components/layout/Footer";
 	export default {
 		name: 'home',
 		components: {
+            Footer
 		},
 	};
 </script>
