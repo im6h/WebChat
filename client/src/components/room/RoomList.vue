@@ -13,7 +13,7 @@
                                 type="text"
                                 class="rooms__search-input"
                                 placeholder="Search | Enter 'my_rooms' for a list of your created rooms"
-                                v-model.trim="searchInput"
+                                v-model="searchInput"
                         >
                     </div>
                     <transition name="slideDown">
@@ -25,8 +25,8 @@
                                         class="rooms__list-item"
                                 >
                                     <a
-                                            :href="`room/${room._id}`"
                                             class="rooms__list-item-link"
+                                            @click="$emit('reRenderRoom')"
                                             @click.prevent="handleRoomClick(room)"
                                     >
                                         <div class="rooms__item-container">
@@ -48,81 +48,89 @@
 </template>
 
 <script>
-	import axios from 'axios';
-	import { mapGetters } from 'vuex';
-	import Error from '../../components/error/Error.vue';
+    import axios from 'axios';
+    import {mapGetters} from 'vuex';
+    import Error from '../../components/error/Error.vue';
 
-	export default {
-		name: 'RoomList',
-		props: ['message'],
-		components: {
-			Error,
-		},
-		data: function() {
-			return {
-				rooms: [],
-				room_name: null,
-				privateRoomName: null,
-				password: null,
-				privateRoomPassword: null,
-				searchInput: '',
-				errorMessage: this.message,
-				errors: [],
-			};
-		},
-		computed: {
-			...mapGetters({
-				getUserData: 'getUserData',
-			}),
-		},
-		methods: {
-			handleRoomClick(room) {
-				this.$store.dispatch('saveCurrentRoom', room);
-				this.$router.push({
-					name: 'ChatDetail',
-					params: {
-						handle: room._id,
-					},
-				}).catch(err => err);
+    export default {
+        name: 'RoomList',
+        props: ['message'],
+        components: {
+            Error,
+        },
+        data: function () {
+            return {
+                rooms: [],
+                room_name: null,
+                privateRoomName: null,
+                password: null,
+                searchInput: null,
+                privateRoomPassword: null,
+                errorMessage: this.message,
+                errors: [],
+            };
+        },
+        computed: {
+            ...mapGetters({
+                getUserData: 'getUserData',
+            }),
+        },
+        methods: {
+            handleRoomClick(room) {
+                this.$store.dispatch('saveCurrentRoom', room);
+                this.$router.push({
+                    name: 'ChatDetail',
+                    params: {
+                        handle: room._id,
+                    },
+                }).catch(err => err);
 
-			},
-			createRoom() {
-				let config = {
-					url: '/v1/group',
-					method: 'post',
-					data: {
-						'userId': this.getUserData._id,
-						'members': [
-							this.getUserData._id,
-						],
-					},
-				};
-				axios(config)
-					.then(res => {
-						console.log(res);
+            },
+            createRoom() {
+                let config = {
+                    url: '/v1/group',
+                    method: 'post',
+                    data: {
+                        'userId': this.getUserData._id,
+                        'members': [
+                            this.getUserData._id,
+                        ],
+                    },
+                };
+                axios(config)
+                    .then(res => {
+                        console.log(res);
 
-					})
-					.catch(err => {
-						console.log(err);
-					});
-			},
-			fetchRoomData() {
-				axios.get('/v1/room')
-					.then(res => {
-						this.rooms = res.data;
-						this.$store.dispatch('updateRoom', res.data);
-						this.$store.dispatch('saveCurrentRoom',res.data[0]);
-					})
-					.catch(err => {
-						console.log(err);
-					});
-			},
-
-		},
-		created: function() {
-			this.fetchRoomData();
-		},
-	};
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+            fetchRoomData() {
+                axios.get('/v1/room')
+                    .then(res => {
+                        this.rooms = res.data;
+                        this.$store.dispatch('updateRoom', res.data);
+                        this.$store.dispatch('saveCurrentRoom', res.data[0]);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+            filterRoom() {
+                if (!this.searchInput) {
+                    return this.rooms;
+                } else {
+                    this.rooms.filter(function (room) {
+                        return room.avatar.toLowerCase().includes(this.searchInput);
+                    })
+                }
+            }
+        },
+        created: function () {
+            this.fetchRoomData();
+        },
+    };
 </script>
 
 <style lang="scss">
