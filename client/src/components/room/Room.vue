@@ -4,14 +4,16 @@
             <div class="section__content u-max-height p-0">
                 <div class="chat">
                     <div class="chat__content">
-                        <div class="chat__header" v-if="getCurrentRoom">
-                            <span class="section__title__part"># {{ getCurrentRoom.avatar }}</span>
+                        <div class="chat__header" v-if="roomInfo">
+                            <span class="section__title__part"># {{ roomInfo.name }}</span>
                             <div class="chat__actions">
                             </div>
                         </div>
-                        <MessageList
-                                :messages="messages"/>
+                        <MessageList />
                         <MessageInput/>
+                    </div>
+                    <div class="info__room">
+                        <RoomInfo :room-info="roomInfo"/>
                     </div>
                 </div>
             </div>
@@ -20,41 +22,69 @@
 </template>
 
 <script>
-	import MessageInput from '../messages/MessageInput';
-	import MessageList from '../messages/MessageList';
-	import { mapGetters } from 'vuex';
+    import MessageInput from '../messages/MessageInput';
+    import MessageList from '../messages/MessageList';
+    import RoomInfo from "./RoomInfo";
+    import {mapGetters} from 'vuex';
     import {getConnection} from "../../utils/websocket";
     import axios from "axios";
+    import {MESSAGE, ONLINE} from "../../utils/evenTypes";
+
 
     export default {
-		name: 'Room',
-		components: {
-			MessageInput,
-			MessageList,
-		},
-		data: function() {
-			return {
-				usersTyping: '',
-				messages: [],
-			};
-		},
-		computed: {
-            ...mapGetters(["getUserData", "getCurrentRoom"]),
+
+        name: 'Room',
+        components: {
+            RoomInfo,
+            MessageInput,
+            MessageList,
+        },
+        data: function () {
+            return {
+                roomInfo:{}
+            };
+        },
+        computed: {
+            ...mapGetters({
+                userData:"getUserData",
+            }),
+
+        },
+        methods: {
             fetchMessage() {
                 let roomId = this.$route.params.handle;
-                axios.get(`/v1/message/${roomId}`)
+                this.$store.dispatch("fetchMessages",roomId);
+            },
+            fetchInfoRoom() {
+                let roomId = this.$route.params.handle;
+                axios.get(`/v1/room/info/${roomId}`)
                     .then(res => {
-                        this.messages = res.data;
-                        this.$store.commit('MESSAGES_IN_ROOM', res.data);
+                        this.roomInfo = res.data;
+                        this.$store.dispatch("saveCurrentRoom", res.data);
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        console.log(err);
+                    })
             }
-		},
-        methods: {},
-		created() {
-            this.fetchMessage;
-            getConnection().onopen();
-		},
+        },
+        created:function() {
+            this.fetchMessage();
+            this.fetchInfoRoom();
+        },
+        beforeUpdate() {
+            getConnection()
+                .onEvent(MESSAGE, data => {
+                    if (data.sender !== this.userData.username){
+                        this.$store.dispatch("pushMessageInRoom",data)
+                    }
+                    else{
+                        this.$store.dispatch("pushMessageInRoom",data);
+                    }
+                })
+                .onEvent(ONLINE, data => {
+
+                })
+        },
     };
 </script>
 
@@ -62,4 +92,21 @@
     .page {
         overflow: hidden;
     }
+
+    .chat {
+        display: flex;
+        flex-direction: row;
+
+        .chat__content {
+            width: 70%;
+
+        }
+
+        .info__room {
+            width: 30%;
+            margin-left: 2px;
+            border-left: 1px solid white;
+        }
+    }
+
 </style>

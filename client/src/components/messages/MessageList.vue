@@ -1,6 +1,6 @@
 <template>
     <div class="messagesList" id="list" ref="list">
-        <div class="message" v-for="message in getMessagesInRoom" :key="message._id">
+        <div class="message" v-for="message in getMessagesInRoom" >
             <div class="item__right" v-if="message.sender === getUserData.username">
                 <div class="item__content">
                     <span>{{ message.content }}</span>
@@ -19,16 +19,18 @@
     import {mapGetters} from 'vuex';
     export default {
         name: 'MessageList',
-        props: ['messages'],
         data: function () {
             return {
+
             };
         },
         computed: {
-            ...mapGetters(['getUserData', 'getMessagesInRoom']),
+            ...mapGetters(["getUserData","getMessagesInRoom"]),
         },
-        methods: {},
-        created() {
+        methods: {
+
+        },
+        beforeMount(){
         },
         updated() {
             let container = this.$refs.list;
