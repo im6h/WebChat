@@ -1,16 +1,7 @@
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import _ from 'lodash';
 import { decode, encode } from './index';
-import { message } from 'antd';
 import Emitter from './socketEmitter';
-
-// const sock = new SockJs('http://localhost:8081/ws');
-// const stompClient = StompJs.Stomp.over(sock);
-// stompClient.connect({}, function() {
-// 	console.log('connected');
-// }, function(err) {
-// 	console.log(err);
-// });
 
 function url() {
 	const l = window.location;
@@ -39,21 +30,14 @@ export function getConnection() {
 	connection.dispose = () => emitter.dispose();
 	connection.off = event => emitter.off(event);
 	connection.onopen = function() {
-		console.log('Thanh cong');
 		if (queue.length) {
 			const temp = queue;
 			queue = [];
 			temp.forEach(e => this.send(e));
 		}
-		if (process.browser) {
-			message.success('Kết nối thành công');
-		}
 	};
 	connection.onerror = error => {
 		console.log('Looxi', error.message);
-		if (process.browser) {
-			message.error('Kết nối thất bại');
-		}
 	};
 	connection.onmessage = function(e) {
 		const rawData = e.data;

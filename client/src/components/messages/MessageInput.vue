@@ -1,54 +1,77 @@
 <template>
     <div class="input__chat">
         <input type="text" v-model="message">
-        <img src="../../assets/img/baseline_insert_emoticon_white_18dp.png" alt="">
+        <emoji-picker @emoji="insert" :search="search">
+            <div
+                    class="emoji-invoker"
+                    slot="emoji-invoker"
+                    slot-scope="{ events: { click: clickEvent } }"
+                    @click.stop="clickEvent"
+            >
+                <img src="../../assets/img/baseline_insert_emoticon_white_18dp.png" alt="">
+
+            </div>
+            <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
+                <div class="emoji-picker" style="">
+                    <div class="emoji-picker__search">
+                        <input type="text" v-model="search" v-focus>
+                    </div>
+                    <div>
+                        <div v-for="(emojiGroup, category) in emojis" :key="category">
+                            <h5>{{ category }}</h5>
+                            <div class="emojis">
+                <span
+                        v-for="(emoji, emojiName) in emojiGroup"
+                        :key="emojiName"
+                        @click="insert(emoji)"
+                        :title="emojiName"
+                >{{ emoji }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </emoji-picker>
         <img src="../../assets/img/baseline_file_copy_white_18dp.png" alt="" @click="sendFile()">
-<!--        <input type="file" id="file" ref="file" @change="handleFileUpload()">-->
         <button class="btn btn--clear btn--info" @click="sendMessage">Send</button>
     </div>
 </template>
 <script>
     import {getConnection} from '../../utils/websocket';
-    import {MESSAGE,TYPING,FILE} from '../../utils/evenTypes';
-    import axios from 'axios';
-	export default {
-		name: 'Chat',
-		components: {},
-		data:function(){
-		    return {
-                message: '',
-                file:''
-            }
+    import {MESSAGE, TYPING, FILE} from '../../utils/evenTypes';
+    import EmojiPicker from 'vue-emoji-picker';
+
+    export default {
+        name: 'Chat',
+        components: {
+            EmojiPicker
         },
-		methods: {
-			handleFileUpload(){
-				this.file = this.$refs.file.file[0];
+        data: function () {
+            return {
+                message: '',
+                search: '',
+            };
+        },
+        methods: {
+            insert(emoji) {
+                this.message += emoji;
             },
-			sendMessage() {
-				console.log(this.message);
-                getConnection().emitEvent(MESSAGE,{
-                	content:this.message,
-                    roomId: this.$route.params.handle,
+            sendMessage() {
+                let roomId = this.$route.params.handle;
+                getConnection().emitEvent(MESSAGE, {
+                    content: this.message,
+                    roomId,
                 });
-                this.message = ' ';
-			},
-            sendFile(){
-				document.getElementById("file").click();
-				let formData = new FormData();
-				formData.append('file',this.file);
-				let config = {
-					method: 'post',
-					url: '/v1/file',
-					body: formData
-				};
-				axios(config).then(res=>{
-					console.log(res.data)
-                }).catch(err=> console.log(err))
-            }
-		},
+                this.message = '';
+                this.$store.dispatch("fetchMessages", roomId);
+            },
+            sendTyping() {
+
+            },
+        },
 
 
-	};
+    };
 </script>
 <style scoped lang="scss">
     .input__chat {
@@ -63,14 +86,17 @@
         width: 97%;
         right: 5px;
         left: 2px;
+
         input {
             width: 80%;
             background-color: transparent;
             border: transparent;
             color: white;
             padding-right: 10px;
+            padding-left: 0.5rem;
             margin-right: 20px;
-
+            font-size: 20px;
+            outline: none;
         }
 
         img {
@@ -82,5 +108,79 @@
 
         }
 
+        .emoji-invoker {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .emoji-picker {
+            position: fixed;
+            z-index: 1;
+            top: 550px;
+            left: 1420px;
+            font-family: Montserrat;
+            border: 1px solid #ccc;
+            width: 15rem;
+            height: 20rem;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding: 1rem;
+            box-sizing: border-box;
+            border-radius: 0.5rem;
+            background: #fff;
+            box-shadow: 1px 1px 8px #c7dbe6;
+
+            h5 {
+                margin-bottom: 0;
+                color: #b1b1b1;
+                text-transform: uppercase;
+                font-size: 0.8rem;
+                cursor: default;
+            }
+
+            .emojis {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+
+                &:after {
+                    content: "";
+                    flex: auto;
+                }
+
+                span {
+                    padding: 0.2rem;
+                    cursor: pointer;
+                    border-radius: 5px;
+
+                    &:hover {
+                        background: #ececec;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        .emoji-picker__search {
+            display: flex;
+
+            > input {
+                flex: 1;
+                border-radius: 10rem;
+                border: 1px solid #ccc;
+                padding: 0.5rem 1rem;
+                outline: none;
+                color: black;
+            }
+        }
     }
+
 </style>
