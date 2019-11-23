@@ -63,7 +63,7 @@
                     roomId,
                 });
                 this.message = '';
-                this.$store.dispatch('fetchMessages', roomId);
+                this.$store.dispatch("fetchMessages", roomId);
             },
             sendTyping() {
 
