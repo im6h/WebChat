@@ -63,7 +63,7 @@
                     roomId,
                 });
                 this.message = '';
-                this.$store.dispatch("fetchMessages", roomId);
+
             },
             sendTyping() {
 
@@ -83,7 +83,7 @@
         justify-content: center;
         position: absolute;
         bottom: 10px;
-        width: 97%;
+        width: 69%;
         right: 5px;
         left: 2px;
 
@@ -125,7 +125,7 @@
             position: fixed;
             z-index: 1;
             top: 550px;
-            left: 1420px;
+            left: 1000px;
             font-family: Montserrat;
             border: 1px solid #ccc;
             width: 15rem;

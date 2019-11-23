@@ -12,7 +12,6 @@
 <script>
     import RoomList from '../room/RoomList';
     import Room from '../room/Room';
-    import axios from 'axios';
 
     export default {
         name: 'MessagesDetail',
@@ -30,17 +29,6 @@
             reRenderRoom() {
                 this.renderRoom += 1;
             },
-            // currentRoom(){
-            // 	let config = {
-            // 		method:'get',
-            //         url:`/v1/room/info/${this.roomId}`
-            //     };
-            //     axios(config)
-            //         .then(res=>{
-            //             this.$store.dispatch('saveCurrentRoom',res.data);
-            //         })
-            //         .catch(err => err)
-            // }
         },
     };
 </script>
@@ -56,13 +44,13 @@
     }
 
     .page__left {
-        width: 30%;
+        width: 27%;
         padding: 2px;
         border-right: 1px white solid;
     }
 
     .page__right {
-        width: 70%;
+        width: 73%;
         overflow-y: scroll;
     }
 </style>
