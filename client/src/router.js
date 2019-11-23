@@ -54,8 +54,6 @@ const router = new Router({
 			component:()=> import('./components/chat/ChatDetail.vue'),
 			meta:{
 				requiresAuth:true,
-				transitionName: 'router-anim',
-				enterActive:'animated fadeIn'
 			}
 		},
 		{

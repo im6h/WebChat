@@ -9,12 +9,8 @@
                             <div class="chat__actions">
                             </div>
                         </div>
-                        <MessageList :messages="messages"/>
-                        <transition name="slideDown">
-                            <div class="chat__utyping" v-show="usersTyping.length > 0">
-                                <span>{{  }}</span>
-                            </div>
-                        </transition>
+                        <MessageList
+                                :messages="messages"/>
                         <MessageInput/>
                     </div>
                 </div>
@@ -24,12 +20,13 @@
 </template>
 
 <script>
-	import axios from 'axios';
 	import MessageInput from '../messages/MessageInput';
 	import MessageList from '../messages/MessageList';
-	import { mapGetters, mapActions } from 'vuex';
+	import { mapGetters } from 'vuex';
+    import {getConnection} from "../../utils/websocket";
+    import axios from "axios";
 
-	export default {
+    export default {
 		name: 'Room',
 		components: {
 			MessageInput,
@@ -39,17 +36,30 @@
 			return {
 				usersTyping: '',
 				messages: [],
-				roomId: this.$route.params.handle,
 			};
 		},
 		computed: {
-			...mapGetters(['getUserData', 'getMessagesInRoom','getCurrentRoom']),
+            ...mapGetters(["getUserData", "getCurrentRoom"]),
+            fetchMessage() {
+                let roomId = this.$route.params.handle;
+                axios.get(`/v1/message/${roomId}`)
+                    .then(res => {
+                        this.messages = res.data;
+                        this.$store.commit('MESSAGES_IN_ROOM', res.data);
+                    })
+                    .catch(err => console.log(err));
+            }
 		},
-        methods:{},
-
-	};
+        methods: {},
+		created() {
+            this.fetchMessage;
+            getConnection().onopen();
+		},
+    };
 </script>
 
 <style scoped lang="scss">
-
+    .page {
+        overflow: hidden;
+    }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="messagesList" ref="messages" v-if="messages.length">
-        <div class="message" v-for="message in messages" :key="message._id">
-            <div class="item__right" v-if="message.senderId === getUserData._id">
+    <div class="messagesList" id="list" ref="list">
+        <div class="message" v-for="message in getMessagesInRoom" :key="message._id">
+            <div class="item__right" v-if="message.sender === getUserData.username">
                 <div class="item__content">
                     <span>{{ message.content }}</span>
                 </div>
@@ -16,25 +16,25 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex';
-
-	export default {
-		name: 'MessageList',
-		props: ['messages'],
-		data: function() {
-			return {};
-		},
-		computed: {
-			...mapGetters(['getUserData']),
-		},
-        watch:{
-
+    import {mapGetters} from 'vuex';
+    export default {
+        name: 'MessageList',
+        props: ['messages'],
+        data: function () {
+            return {
+            };
         },
-		methods: {},
-		created() {
-
-		},
-	};
+        computed: {
+            ...mapGetters(['getUserData', 'getMessagesInRoom']),
+        },
+        methods: {},
+        created() {
+        },
+        updated() {
+            let container = this.$refs.list;
+            container.scrollTop = container.scrollHeight;
+        }
+    };
 </script>
 
 <style scoped lang="scss">
@@ -44,16 +44,16 @@
         padding: 0;
         display: inline-flex;
         flex-direction: column;
-        border-bottom: 1px white solid;
         height: 77vh;
         overflow-x: auto;
-        width: 100%;
+        width: 97%;
     }
 
     .message {
         width: 100%;
         display: flex;
     }
+
     .item__right {
         width: 100%;
         display: flex;
@@ -63,7 +63,6 @@
         padding: 0.5rem;
         border-radius: 8px;
         text-align: left;
-        margin: 0 3rem;
         justify-content: flex-end;
         font-family: 'Work Sans';
         white-space: pre-line;
@@ -84,7 +83,8 @@
         font-family: 'Work Sans';
         white-space: pre-line;
     }
-    .item__content{
+
+    .item__content {
         position: relative;
         background: #3c9adf;
         padding: 0.5rem;

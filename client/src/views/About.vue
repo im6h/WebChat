@@ -26,15 +26,18 @@
                 </div>
             </div>
         </section>
+        <Footer></Footer>
     </div>
 </template>
 
 <script>
-	// @ is an alias to /client
+    import Footer from "../components/layout/Footer";
 	export default {
 		name: 'About',
 		props: [],
-		components: {},
+        components: {
+            Footer
+        },
 		mounted() {
 		},
 	};
