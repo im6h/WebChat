@@ -1,5 +1,5 @@
 <template>
-    <div class="page__message">
+    <div class="page__message gin-container">
         <section class="page__left">
             <RoomList></RoomList>
         </section>
