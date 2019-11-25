@@ -2,6 +2,7 @@
 	display: flex;
 	align-items: center;
 	width: 85%;
+	height: 6vh;
 	padding: 1em 0;
 	margin: 0 auto;
 
@@ -145,9 +146,4 @@
 		//}
 	}
 }
-.gin-nav {
-	height: 64px;
-}
-.gin-container {
-	height: calc(100vh - 64px);
-}
+
