@@ -1,6 +1,6 @@
 <template>
     <header>
-        <nav class="nav" v-if="!isAuthorized">
+        <nav class="nav gin-nav" v-if="!isAuthorized">
             <div class="navbar__brand">
                 <router-link to="/" class="navbar__textbrand">Astro Chat</router-link>
             </div>

@@ -83,11 +83,11 @@
   &__actions {
     padding: 1rem 1rem 0px;
     width: 100%;
+    display: flex;
 
   }
 
   &__search-input {
-    font-family: 'Work Sans';
     position: relative;
     padding: 1rem;
     border-radius: 3px;
