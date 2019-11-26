@@ -99,7 +99,6 @@
 
                 axios(config)
                     .then(res => {
-                        console.log(res.data);
                         this.users = _.remove(this.users, (n) => {
                             return n._id !== userId;
                         })

@@ -70,7 +70,6 @@
                 };
                 axios(config)
                     .then(res => {
-                        console.log(res.data);
                         EventBus.$emit('forceRerender')
                     })
                     .catch(err => console.log(err))

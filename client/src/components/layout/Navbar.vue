@@ -44,58 +44,60 @@
     </header>
 </template>
 <script>
-	import { mapActions, mapGetters } from 'vuex';
-	import axios from 'axios';
+    import {mapActions, mapGetters} from 'vuex';
+    import axios from 'axios';
 
-	export default {
-		name: 'Navbar',
-		data: function() {
-			return {
-				navToggleState: false,
-			};
-		},
-		computed: {
-			...mapGetters(['getUserData', 'isAuthorized']),
-			getCurrentUser: function() {
-				if (!this.isAuthorized) {
-					let config = {
-						method: 'get',
-						url: '/v1/user/current',
-					};
-					axios(config)
-						.then(res => {
-							if (res) {
-								this.$store.dispatch('toggleAuthState', true);
-								this.$store.dispatch('saveUserData', res.data);
-								this.user = res.data;
-							}
-						}).catch(err => err);
-				}
-			},
-		},
-		methods: {
-			...mapActions(['toggleAuthState']),
-			logout() {
-				let config = {
-					method: 'get',
-					url: '/v1/user/logout',
-				};
-				axios(config)
-					.then(res => {
-						if (res.status === 200) {
-							localStorage.clear();
-							this.$store.dispatch('toggleAuthState', false);
-							this.$router.push({
-								name: 'Login',
-							});
-						}
-					}).catch(err => err);
-			},
-		},
-		created() {
-			this.getCurrentUser;
-		},
-	};
+    export default {
+        name: 'Navbar',
+        data: function () {
+            return {
+                navToggleState: false,
+            };
+        },
+        computed: {
+            ...mapGetters(['getUserData', 'isAuthorized']),
+            getCurrentUser: function () {
+                if (!this.isAuthorized) {
+                    let config = {
+                        method: 'get',
+                        url: '/v1/user/current',
+                    };
+                    axios(config)
+                        .then(res => {
+                            if (res.status === 200) {
+                                this.$store.dispatch('toggleAuthState', true);
+                                this.$store.dispatch('saveUserData', res.data);
+                            }
+                        }).catch(err => {
+						    if (err.response.status === 401){
+                            }
+                    });
+                }
+            },
+        },
+        methods: {
+            ...mapActions(['toggleAuthState']),
+            logout() {
+                let config = {
+                    method: 'get',
+                    url: '/v1/user/logout',
+                };
+                axios(config)
+                    .then(res => {
+                        if (res.status === 200) {
+                            localStorage.clear();
+                            this.$store.dispatch('toggleAuthState', false);
+                            this.$router.push({
+                                name: 'Login',
+                            });
+                        }
+                    }).catch(err => err);
+            },
+        },
+        created() {
+            this.getCurrentUser;
+        },
+    };
 </script>
 <style lang="scss" scoped>
     @import "../../assets/scss/components/navbar";
