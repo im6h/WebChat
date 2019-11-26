@@ -167,7 +167,7 @@ export default {
 		width: 1.5rem;
 		height: 1.5rem;
 		margin-right: 1rem;
-		margin-top:5px;
+		margin-top: 5px;
 		border-radius: 50%;
 		cursor: pointer;
 		transition: all 0.2s;
