@@ -5,11 +5,6 @@
                 <span class="section__title">Dashboard</span>
             </div>
             <div class="section__content">
-                <router-link
-                        :to="{name: 'RoomList'}"
-                        class="btn btn--info mt-3 center"
-                >Start Chatting!
-                </router-link>
                 <div class="infobox__container" v-if="user">
                     <span class="lead">Your current profile</span>
                     <div class="infobox__item">

@@ -10,7 +10,7 @@
                             </div>
                         </div>
                         <MessageList />
-                        <MessageInput/>
+                        <MessageInput />
                     </div>
                     <div class="info__room">
                         <RoomInfo :room-info="roomInfo"/>
@@ -30,7 +30,6 @@
     import axios from "axios";
     import {MESSAGE, ONLINE} from "../../utils/evenTypes";
 
-
     export default {
 
         name: 'Room',
@@ -41,7 +40,8 @@
         },
         data: function () {
             return {
-                roomInfo:{}
+                roomInfo:{},
+                keyRoomInfo:0,
             };
         },
         computed: {
@@ -65,26 +65,24 @@
                     .catch(err => {
                         console.log(err);
                     })
-            }
+            },
         },
         created:function() {
             this.fetchMessage();
             this.fetchInfoRoom();
+
         },
         beforeUpdate() {
             getConnection()
                 .onEvent(MESSAGE, data => {
-                    if (data.sender !== this.userData.username){
-                        this.$store.dispatch("pushMessageInRoom",data)
-                    }
-                    else{
-                        this.$store.dispatch("pushMessageInRoom",data);
-                    }
+                    this.$store.dispatch('pushMessageInRoom',data);
                 })
                 .onEvent(ONLINE, data => {
 
                 })
         },
+        beforeDestroy() {
+        }
     };
 </script>
 

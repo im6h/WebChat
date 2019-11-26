@@ -46,7 +46,7 @@
         padding: 0;
         display: inline-flex;
         flex-direction: column;
-        height: 77vh;
+        height: 74vh;
         overflow-x: auto;
         width: 97%;
     }
