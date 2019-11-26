@@ -25,8 +25,8 @@ class ChatSocketServer extends WebSocketServer {
 		this.on('connection', ws => {
 			ws.initExtension();
 			this._runWlm(ws, err => {
-				console.log('connected', err);
 				if (err) return ws.close();
+				console.log('connected');
 				this.eventer.emit('connection', ws);
 				this._initSocketEvent(ws);
 			});
@@ -117,6 +117,7 @@ class ChatSocketServer extends WebSocketServer {
 		});
 	}
 	emitToRoom(room, event, payload) {
+		console.log(this.clients.size);
 		this.clients.forEach(ws => {
 			if (ws.isOpen() && ws.rooms.has(room)) {
 				ws.emitEvent(event, payload);
