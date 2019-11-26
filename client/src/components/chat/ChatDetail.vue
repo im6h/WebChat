@@ -12,6 +12,7 @@
 <script>
     import RoomList from '../room/RoomList';
     import Room from '../room/Room';
+    import {EventBus} from "../../eventBus";
 
     export default {
         name: 'MessagesDetail',
@@ -30,6 +31,14 @@
                 this.renderRoom += 1;
             },
         },
+        created() {
+            EventBus.$on('forceRerender',()=>{
+                this.renderRoom +=1;
+            })
+        },
+        beforeDestroy() {
+          EventBus.$off('forceRerender');
+        }
     };
 </script>
 

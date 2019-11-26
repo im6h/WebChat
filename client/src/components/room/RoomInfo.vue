@@ -19,7 +19,9 @@
                 </div>
             </div>
             <div>
-                <RoomModal v-if="showModal" @close="closeModal()"/>
+                <RoomModal
+                        :memberInRoom="roomInfo.members"
+                        v-if="showModal" @close="closeModal()"/>
             </div>
         </div>
     </div>
@@ -29,12 +31,13 @@
     import {mapGetters} from "vuex";
     import RoomModal from "./RoomModal";
     import axios from "axios";
+    import {EventBus} from "../../eventBus";
 
     export default {
         name: "RoomInfo",
         props: ['roomInfo'],
-        components:{
-          RoomModal
+        components: {
+            RoomModal
         },
         data() {
             return {
@@ -49,7 +52,7 @@
             addUser() {
                 this.showModal = true;
             },
-            closeModal(){
+            closeModal() {
                 this.showModal = false;
             },
             removeUser(userId) {
@@ -66,7 +69,10 @@
                     data: body
                 };
                 axios(config)
-                    .then(res => console.log(res.data))
+                    .then(res => {
+                        console.log(res.data);
+                        EventBus.$emit('forceRerender')
+                    })
                     .catch(err => console.log(err))
             }
         },

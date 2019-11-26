@@ -6,7 +6,7 @@
                     <slot name="header">
                         <span>
                             <input type="text"
-                                   placeholder="Search user"
+                                   placeholder="Search user | Input name of user"
                                    v-model="searchUser"
                             >
                             <button @click="searchUserByText()">Search</button>
@@ -14,19 +14,31 @@
                     </slot>
                 </div>
                 <div class="modal-body">
-                    <slot name="body">
+                    <slot name="body" v-if="users.length">
                         <div class="user" v-for="user in users">
                             <span>
                                 <p>{{user.username}}</p>
-                                <button type="button" @click="addUser(user._id)">Add</button>
+                                <button v-if="checkAddUser(user)"
+                                        type="button"
+                                        class="added-button"
+                                        disabled>Added</button>
+                                <button v-else
+                                        type="button"
+                                        class="add-button"
+                                        @click="addUser(user._id)">Add</button>
                             </span>
+                        </div>
+                    </slot>
+                    <slot name="body" v-else>
+                        <div class="user">
+                            <span style="color: #18191c">No result search</span>
                         </div>
                     </slot>
                 </div>
                 <div class="modal-footer">
                     <slot name="footer">
-                        <button class="modal-default-button" @click="$emit('close')">
-                            Cancel
+                        <button class="modal-default-button" @click="closeModal()">
+                            Close
                         </button>
                     </slot>
                 </div>
@@ -38,8 +50,12 @@
 <script>
     import {mapGetters} from "vuex";
     import axios from "axios";
+    import {EventBus} from "../../eventBus";
+    import _ from "lodash";
+
     export default {
         name: "RoomModal",
+        props: ["memberInRoom"],
         data() {
             return {
                 searchUser: '',
@@ -47,7 +63,7 @@
             }
         },
         computed: {
-            ...mapGetters(["getUserData"])
+            ...mapGetters(["getUserData", "getCurrentRoom"]),
         },
         methods: {
             searchUserByText() {
@@ -59,6 +75,14 @@
                     .catch(err => {
                         console.log(err);
                     })
+            },
+            checkAddUser(user) {
+                let members = this.getCurrentRoom.members;
+                let nameMember = _.map(members, m=>{
+                    return m._id
+                });
+                return(_.includes(nameMember,user._id));
+
             },
             addUser(userId) {
                 let roomId = this.$route.params.handle;
@@ -74,13 +98,19 @@
                 };
 
                 axios(config)
-                    .then(res=>{
+                    .then(res => {
                         console.log(res.data);
-                        this.$emit('close')
+                        this.users = _.remove(this.users, (n) => {
+                            return n._id !== userId;
+                        })
                     })
-                    .catch(err=>{
+                    .catch(err => {
                         console.log(err)
                     })
+            },
+            closeModal() {
+                this.$emit('close');
+                EventBus.$emit('forceRerender');
             }
         }
     }
@@ -114,14 +144,40 @@
                 font-family: Helvetica, Arial, sans-serif;
 
                 .modal-header {
+                    width: 100%;
+
                     h3 {
                         margin-top: 0;
                         color: #42b983;
+                    }
+
+                    span {
+                        width: 100%;
+
+                        input {
+                            width: 80%;
+                            padding: 10px;
+                            border-radius: 2px;
+                            border-top: 1px solid transparent;
+                            border-left: 1px solid transparent;
+                            border-right: 1px solid transparent;
+                        }
+
+                        button {
+                            width: 19%;
+                            padding: 12px;
+                            margin-left: 4px;
+                            border-radius: 5px;
+                            border: 1px solid white;
+                            cursor: pointer;
+                        }
                     }
                 }
 
                 .modal-body {
                     margin: 20px 0;
+                    height: 350px;
+                    width: 100%;
 
                     span {
                         width: 100%;
@@ -130,17 +186,29 @@
                         margin-left: 20px;
                         margin-right: 20px;
                         padding-bottom: 20px;
+
                         p {
                             color: #18191c;
                         }
 
-                        button {
-                            margin-left: 65%;
-                            padding: 0.1rem;
+                        .added-button {
+                            margin-left: 70%;
+                            padding: 0.4rem;
+                            border-radius: 2px;
+                            color: #b1b1b1;
+                            background-color: transparent;
+                            border: 1px solid transparent;
+
+                        }
+
+                        .add-button {
+                            margin-left: 70%;
+                            padding: 0.4rem;
                             border-radius: 2px;
                             color: #000;
                             background-color: transparent;
                             border: 1px solid transparent;
+                            cursor: pointer;
 
                         }
                     }
@@ -149,6 +217,11 @@
                 .modal-footer {
                     .modal-default-button {
                         float: right;
+                        padding: 10px 20px;
+                        margin-left: 4px;
+                        border-radius: 5px;
+                        border: 1px solid white;
+                        cursor: pointer;
                     }
                 }
             }
