@@ -27,7 +27,11 @@
 									>
 										<div class="rooms__item-container">
 											<div class="rooms__item-details">
-												<p>{{ room.avatar }}</p>
+												<div>{{room.avatar}}</div>
+												<span>
+													<p v-if="room.lastMessage">{{room.lastMessage.sender}} : {{room.lastMessage.content}}</p>
+													<p v-else></p>
+												</span>
 											</div>
 										</div>
 									</a>
@@ -46,7 +50,7 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import Error from '../../components/error/Error.vue';
-
+import {EventBus} from '../../eventBus.js';
 export default {
 	name: 'RoomList',
 	props: ['message'],
@@ -98,6 +102,8 @@ export default {
 				.catch(err => {
 					console.log(err);
 				});
+			this.fetchRoomData();
+				
 		},
 		fetchRoomData() {
 			axios
@@ -111,19 +117,15 @@ export default {
 					console.log(err);
 				});
 		},
-		filterRoom() {
-			if (!this.searchInput) {
-				return this.rooms;
-			} else {
-				this.rooms.filter(function(room) {
-					return room.avatar.toLowerCase().includes(this.searchInput);
-				});
-			}
-		},
+		filterRoom() {},
 	},
-	created: function() {
+	created() {
 		this.fetchRoomData();
+		EventBus.$on('reloadListRoom',()=>{
+			this.fetchRoomData();
+		})
 	},
+
 };
 </script>
 

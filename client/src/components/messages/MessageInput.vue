@@ -51,8 +51,6 @@ import { getConnection } from '../../utils/websocket';
 import { MESSAGE, TYPING, FILE } from '../../utils/evenTypes';
 import EmojiPicker from 'vue-emoji-picker';
 import axios from 'axios';
-import { log } from 'util';
-
 export default {
 	name: 'Chat',
 	components: {

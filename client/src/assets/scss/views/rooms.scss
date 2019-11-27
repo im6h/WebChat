@@ -60,12 +60,29 @@
     }
 
     &-details {
-      width: 50%;
+      width: auto;
       text-align: left;
-
+      color: black;
+      border-radius: 5%;
+      padding:10px;
+      color: white;
+      display: flex;
+      flex-direction: row;
+      div{
+        font-size: 20px;
+        margin-right:1rem;
+        border-radius: 50%;
+      }
+      span{
+        margin-left: 2rem;
+        p{
+          margin-top: 10px;
+          font-size: 10px;
+          
+        }
+      }
     }
 
-    /** List Item Actions */
     &-actions {
       display: flex;
       justify-content: flex-end;
