@@ -2,6 +2,10 @@ const router = require('express').Router();
 const mustAuth = require('../middlewares/must-auth');
 const multer = require('multer');
 const fileModel = require('../models/file');
+const fs = require('fs');
+if (!fs.existsSync('uploads')) {
+	fs.mkdirSync('uploads');
+}
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => cb(null, 'uploads/'),
 	filename: function(req, file, cb) {
@@ -15,7 +19,7 @@ const upload = multer({
 	},
 	storage,
 });
-// send file 
+// send file
 router.post('/', upload.single('file'), mustAuth, async (req, res) => {
 	const file = req.file;
 	const record = await fileModel.create({ ...file, uploader: req.user._id });

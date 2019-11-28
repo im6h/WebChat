@@ -62,7 +62,7 @@
 
     .page__left {
         width: 30%;
-        padding: 2px;
-        border-right: 1px white solid;
+        /*padding: 2px;*/
+        /*border-right: 1px solid #c8cfd2;*/
     }
 </style>

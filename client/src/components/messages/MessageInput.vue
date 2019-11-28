@@ -1,6 +1,6 @@
 <template>
 	<div class="input__chat">
-		<input type="text" v-model="message" />
+		<input type="text" v-model="message" @change="onChange" />
 		<emoji-picker @emoji="insert" :search="search">
 			<div
 				class="emoji-invoker"
@@ -8,7 +8,10 @@
 				slot-scope="{ events: { click: clickEvent } }"
 				@click.stop="clickEvent"
 			>
-				<img src="../../assets/img/baseline_insert_emoticon_white_18dp.png" />
+				<img
+					style="background: #ccc;"
+					src="../../assets/img/baseline_insert_emoticon_white_18dp.png"
+				/>
 			</div>
 			<div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
 				<div class="emoji-picker" style>
@@ -24,7 +27,8 @@
 									:key="emojiName"
 									@click="insert(emoji)"
 									:title="emojiName"
-								>{{ emoji }}</span>
+									>{{ emoji }}</span
+								>
 							</div>
 						</div>
 					</div>
@@ -32,12 +36,17 @@
 			</div>
 		</emoji-picker>
 		<div class="up__file">
-			<img src="../../assets/img/baseline_file_copy_white_18dp.png" alt @click="selectFile()" />
+			<img
+				style="background: #ccc;"
+				src="../../assets/img/baseline_file_copy_white_18dp.png"
+				alt
+				@click="selectFile()"
+			/>
 			<input type="file" ref="file" hidden="hidden" @change="fileUpload" />
 		</div>
 		<div class="show__file" v-if="file">
 			<span>
-				<p>{{fileName}}</p>
+				<p>{{ fileName }}</p>
 				<div class="btn--action">
 					<button class="btn--remove" @click="removeFile()">X</button>
 				</div>
@@ -101,32 +110,37 @@ export default {
 		removeFile() {
 			this.file = '';
 		},
+		onChange(e) {
+			const value = e.target.value;
+			console.log(value);
+			this.sendMessage();
+		},
 	},
 };
 </script>
 <style scoped lang="scss">
 .input__chat {
-	margin: 2rem 1rem 1px;
+	/*margin: 2rem 1rem 1px;*/
 	padding: 10px 5px;
-	border: 1px white solid;
+	border: 1px #c8cfd2 solid;
 	border-radius: 5px;
 	display: flex;
 	justify-content: center;
 	position: absolute;
 	bottom: 10px;
-	width: 69%;
-	right: 5px;
-	left: 2px;
+	width: 80%;
+	/*right: 5px;*/
+	left: 20px;
 
 	input {
 		width: 80%;
 		background-color: transparent;
 		border: transparent;
-		color: white;
+		color: #acb3b6;
 		padding-right: 10px;
 		padding-left: 0.5rem;
 		margin-right: 20px;
-		font-size: 20px;
+		font-size: 14px;
 		outline: none;
 	}
 
@@ -180,7 +194,7 @@ export default {
 		z-index: 1;
 		top: 550px;
 		left: 1000px;
-		font-family: Montserrat;
+		/*font-family: Montserrat;*/
 		border: 1px solid #ccc;
 		width: 15rem;
 		height: 20rem;

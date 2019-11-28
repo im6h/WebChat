@@ -19,8 +19,8 @@
     margin: 0 1rem;
     display: flex;
     align-items: center;
-    background: rgba($color: #18191c, $alpha: 0.8);
-    border-bottom: 1px solid #ccc;
+    //background: rgba($color: #18191c, $alpha: 0.8);
+    border-bottom: 1px solid #c8cfd2;
   }
 
   &__actions {
@@ -78,7 +78,7 @@
       align-items: center;
       margin: 0 2rem;
       width: 80%;
-      font-family: 'Russo One';
+      //font-family: 'Russo One';
     }
   }
 
@@ -126,7 +126,7 @@
       text-align: left;
       margin: 0 1rem;
       align-self: center;
-      font-family: 'Work Sans';
+      //font-family: 'Work Sans';
       white-space: pre-line;
 
       &--left::before {
@@ -168,7 +168,7 @@
     background: #101114;
 
     & > span {
-      font-family: 'Work Sans';
+      //font-family: 'Work Sans';
       transition: all 0.5s ease;
     }
   }
@@ -184,7 +184,7 @@
     &-control {
       position: relative;
       padding: 1rem 0 1rem 0.5rem;
-      font-family: 'Russo One';
+      //font-family: 'Russo One';
       font-size: 0.9rem !important;
       width: 100%;
       resize: none;

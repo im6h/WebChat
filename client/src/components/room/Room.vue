@@ -28,7 +28,7 @@ import { mapGetters } from 'vuex';
 import { getConnection } from '../../utils/websocket';
 import axios from 'axios';
 import { MESSAGE, ONLINE } from '../../utils/evenTypes';
-import {EventBus} from '../../eventBus.js';
+import { EventBus } from '../../eventBus.js';
 
 export default {
 	name: 'Room',
@@ -86,19 +86,24 @@ export default {
 .page {
 	overflow: hidden;
 }
-
+.u-max-height {
+	height: 100%;
+	max-height: 100%;
+}
 .chat {
 	display: flex;
 	flex-direction: row;
-
+	height: 100%;
 	.chat__content {
 		width: 70%;
+		position: relative;
 	}
 
 	.info__room {
 		width: 30%;
-		margin-left: 2px;
-		border-left: 1px solid white;
+		/*margin-left: 2px;*/
+		border-left: 1px solid #c8cfd2;
+		color: #667576;
 	}
 }
 </style>
