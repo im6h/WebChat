@@ -42,13 +42,13 @@
 <style scoped lang="scss">
 
     .messagesList {
-        margin: 5px 20px;
+        /*margin: 5px 20px;*/
         padding: 0;
         display: inline-flex;
         flex-direction: column;
         height: 74vh;
         overflow-x: auto;
-        width: 97%;
+        width: 100%;
     }
 
     .message {
@@ -66,7 +66,7 @@
         border-radius: 8px;
         text-align: left;
         justify-content: flex-end;
-        font-family: 'Work Sans';
+        /*font-family: 'Work Sans';*/
         white-space: pre-line;
     }
 
@@ -82,19 +82,20 @@
         margin: 0 1rem;
         align-self: center;
         justify-content: flex-start;
-        font-family: 'Work Sans';
+        /*font-family: 'Work Sans';*/
         white-space: pre-line;
     }
 
     .item__content {
         position: relative;
-        background: #3c9adf;
+        background: #c8cfd2;
+        color: #313a3b;
         padding: 0.5rem;
         border-radius: 8px;
         text-align: left;
         margin: 0 1rem;
         align-self: center;
-        font-family: 'Work Sans';
+        /*font-family: 'Work Sans';*/
         white-space: pre-line;
     }
 
