@@ -13,7 +13,7 @@
 							type="text"
 							class="rooms__search-input"
 							placeholder="Search | Enter 'my_rooms' for a list of your created rooms"
-							v-model="searchInput"
+							@change="onSearch"
 						/>
 					</div>
 					<transition name="slideDown">
@@ -44,8 +44,17 @@
 															</span>
 														</div>
 													</div>
-													<div class="content">
+													<div
+														class="content"
+														v-if="room.lastMessage.type === 'text'"
+													>
 														{{ room.lastMessage.content }}
+													</div>
+													<div
+														class="content"
+														v-if="room.lastMessage.type !== 'text'"
+													>
+														Attached file
 													</div>
 												</div>
 												<div
@@ -73,6 +82,8 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import Error from '../../components/error/Error.vue';
 import { EventBus } from '../../eventBus.js';
+import { getConnection } from '../../utils/websocket';
+import { JOIN } from '../../utils/evenTypes';
 export default {
 	name: 'RoomList',
 	props: ['message'],
@@ -85,7 +96,6 @@ export default {
 			room_name: null,
 			privateRoomName: null,
 			password: null,
-			searchInput: null,
 			privateRoomPassword: null,
 			errorMessage: this.message,
 			errors: [],
@@ -118,13 +128,13 @@ export default {
 				},
 			};
 			axios(config)
-				.then(res => {
-					console.log(res);
+				.then(({ data: roomId }) => {
+					this.fetchRoomData();
+					getConnection().emitEvent(JOIN, { roomId });
 				})
 				.catch(err => {
 					console.log(err);
 				});
-			this.fetchRoomData();
 		},
 		fetchRoomData() {
 			axios
@@ -136,6 +146,21 @@ export default {
 				})
 				.catch(err => {
 					console.log(err);
+				});
+		},
+		onSearch(e) {
+			const value = e.target.value;
+			if (!value) {
+				return this.fetchRoomData();
+			}
+			axios
+				.get('/v1/room/search?text=' + value)
+				.then(({ data }) => {
+					this.rooms = data;
+					this.$store.dispatch('updateRoom', data);
+				})
+				.catch(e => {
+					console.log(e);
 				});
 		},
 		filterRoom() {},

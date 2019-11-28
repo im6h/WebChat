@@ -139,7 +139,7 @@ li .nav__link.router-link-exact-active {
 	}
 
 	&--info {
-		color: #fff;
+		color: #667576;
 		background: #c8d0d2;
 		border-radius: 5px;
 		animation-delay: 0.8s;
@@ -274,4 +274,7 @@ li .nav__link.router-link-exact-active {
 	bottom: 0;
 	z-index: 1;
 	overflow: hidden;
+}
+.text-color {
+	color: #c8cfd2;
 }

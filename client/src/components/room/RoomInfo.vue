@@ -3,12 +3,12 @@
 		<div class="room__info__header">
 			<h3>{{ roomInfo.name }}</h3>
 		</div>
-		<div class="room__info__body">
+		<div class="room__info__body" v-if="roomInfo.type === 'group'">
 			<div class="list-user">
-				<h2>People</h2>
+				<h2>Members</h2>
 				<span class="modal--people">
 					<a href="#" @click="addUser()">
-						<div>Add people</div>
+						<div class="btn btn--info">Invite member</div>
 					</a>
 				</span>
 				<div class="user" v-for="user in roomInfo.members">
@@ -55,6 +55,7 @@ export default {
 			this.showModal = true;
 		},
 		closeModal() {
+			console.log(this);
 			this.showModal = false;
 		},
 		removeUser(userId) {
@@ -74,7 +75,9 @@ export default {
 				.then(res => {
 					EventBus.$emit('forceRerender');
 				})
-				.catch(err => console.log(err));
+				.catch(err => {
+					window.location.href = '/chat';
+				});
 		},
 	},
 	beforeCreate() {},
@@ -98,7 +101,10 @@ export default {
 	&__body {
 		height: 50%;
 		width: 100%;
-
+		.add-btn {
+			padding: 8px 15px;
+			border: 1px solid #c8cfd2;
+		}
 		.list-user {
 			display: flex;
 			flex-direction: column;
@@ -118,7 +124,7 @@ export default {
 
 				a {
 					text-decoration: none;
-					color: #c8cfd2;
+					color: #667576;
 
 					div {
 						margin: 10px;
@@ -142,7 +148,7 @@ export default {
 					a {
 						margin-left: 20px;
 						padding: 0.1rem;
-                        font-size: 12px;
+						font-size: 12px;
 						/*color: #fff;*/
 					}
 				}

@@ -81,6 +81,10 @@ module.exports = wss => {
 				_.pick(message, ['sender', 'date', 'content', '_id', 'room']),
 			);
 		});
+		ws.onEvent(EventType.JOIN, async ({ roomId }) => {
+			await socketUtil.joinRoom(ws, roomId);
+			//
+		});
 		ws.onEvent('disconnect', async () => {
 			console.log(ws.user.username, 'disconnected');
 			ws.socketManager.remove(ws.user._id.toString(), ws.id);

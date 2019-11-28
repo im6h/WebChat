@@ -86,6 +86,9 @@ router.put(
 			},
 		);
 		if (record) {
+			if(record.members.length === 1) {
+				await record.remove();
+			}
 			res.send({ status: 'success', _id: userId });
 		} else {
 			return res.status(403).send({ status: 'error' });

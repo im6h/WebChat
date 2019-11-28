@@ -40,7 +40,4 @@ function _initBaseMiddleware(server) {
 }
 function _initRouter(server) {
 	server.use('/v1', require('./server/routes'));
-	server.get('*', (req, res) => {
-		return handle(req, res);
-	});
 }
