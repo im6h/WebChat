@@ -45,10 +45,10 @@
 			<input type="file" ref="file" hidden="hidden" @change="fileUpload" />
 		</div>
 		<div class="show__file" v-if="file">
-			<span>
+			<span class="text-color">
 				<p>{{ fileName }}</p>
 				<div class="btn--action">
-					<button class="btn--remove" @click="removeFile()">X</button>
+					<div class="btn--info remove-file-btn" @click="removeFile()">Remove</div>
 				</div>
 			</span>
 		</div>
@@ -90,10 +90,12 @@ export default {
 					.post('/v1/file', form)
 					.then(res => {
 						console.log(res);
+						getConnection().emitEvent(FILE, { fileId: res.data, roomId });
 					})
 					.catch(err => console.log(err));
 				this.file = null;
 			} else {
+				if (!this.message) return;
 				getConnection().emitEvent(MESSAGE, {
 					content: this.message,
 					roomId,
@@ -162,15 +164,18 @@ export default {
 		span {
 			display: flex;
 			p {
-				margin-right: 92%;
+				margin-right: 5%;
 			}
 			.btn--action {
 				.btn--remove {
 					margin-left: 4px;
 					border: 1px solid transparent;
-					padding: 2px;
 					background-color: #18191c;
 					color: white;
+				}
+				.remove-file-btn {
+					font-size: 11px;
+					padding: 2px 5px;
 				}
 			}
 		}
