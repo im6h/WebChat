@@ -8,12 +8,9 @@
 				slot-scope="{ events: { click: clickEvent } }"
 				@click.stop="clickEvent"
 			>
-				<img
-					style="background: #ccc;"
-					src="../../assets/img/baseline_insert_emoticon_white_18dp.png"
-				/>
+				<img src="../../assets/img/emoji_emotions-24px.svg" />
 			</div>
-			<div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
+			<div slot="emoji-picker" slot-scope="{ emojis, insert }">
 				<div class="emoji-picker" style>
 					<div class="emoji-picker__search">
 						<input type="text" v-model="search" v-focus />
@@ -27,8 +24,7 @@
 									:key="emojiName"
 									@click="insert(emoji)"
 									:title="emojiName"
-									>{{ emoji }}</span
-								>
+								>{{ emoji }}</span>
 							</div>
 						</div>
 					</div>
@@ -36,12 +32,7 @@
 			</div>
 		</emoji-picker>
 		<div class="up__file">
-			<img
-				style="background: #ccc;"
-				src="../../assets/img/baseline_file_copy_white_18dp.png"
-				alt
-				@click="selectFile()"
-			/>
+			<img src="../../assets/img/file_copy-24px.svg" alt @click="selectFile()" />
 			<input type="file" ref="file" hidden="hidden" @change="fileUpload" />
 		</div>
 		<div class="show__file" v-if="file">
@@ -57,9 +48,10 @@
 </template>
 <script>
 import { getConnection } from '../../utils/websocket';
-import { MESSAGE, TYPING, FILE } from '../../utils/evenTypes';
+import { MESSAGE, FILE } from '../../utils/evenTypes';
 import EmojiPicker from 'vue-emoji-picker';
 import axios from 'axios';
+import { EventBus } from '../../eventBus.js';
 export default {
 	name: 'Chat',
 	components: {
@@ -89,18 +81,22 @@ export default {
 				axios
 					.post('/v1/file', form)
 					.then(res => {
-						console.log(res);
-						getConnection().emitEvent(FILE, { fileId: res.data, roomId });
+						getConnection().emitEvent(FILE, {
+							fileId: res.data,
+							roomId,
+						});
 					})
 					.catch(err => console.log(err));
 				this.file = null;
 			} else {
-				if (!this.message) return;
-				getConnection().emitEvent(MESSAGE, {
-					content: this.message,
-					roomId,
-				});
-				this.message = '';
+				if (this.message !== '') {
+					getConnection().emitEvent(MESSAGE, {
+						content: this.message,
+						roomId,
+					});
+					this.message = '';
+					EventBus.$emit('reloadMessage');
+				}
 			}
 		},
 		selectFile() {
@@ -114,7 +110,6 @@ export default {
 		},
 		onChange(e) {
 			const value = e.target.value;
-			console.log(value);
 			this.sendMessage();
 		},
 	},
@@ -130,15 +125,15 @@ export default {
 	justify-content: center;
 	position: absolute;
 	bottom: 10px;
-	width: 80%;
-	/*right: 5px;*/
-	left: 20px;
+	width: 94%;
+	left: 4%;
+	right: 4%;
 
 	input {
 		width: 80%;
 		background-color: transparent;
 		border: transparent;
-		color: #acb3b6;
+		color: #241919;
 		padding-right: 10px;
 		padding-left: 0.5rem;
 		margin-right: 20px;

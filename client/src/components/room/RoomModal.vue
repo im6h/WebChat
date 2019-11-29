@@ -16,7 +16,7 @@
 				</div>
 				<div class="modal-body">
 					<slot name="body" v-if="users.length">
-						<div class="user" v-for="user in users">
+						<div class="user" v-for="user in users" :key="user.user">
 							<span>
 								<p>{{ user.username }}</p>
 								<button
@@ -118,7 +118,7 @@ export default {
 		},
 		closeModal() {
 			this.$emit('close');
-			// EventBus.$emit('forceRerender');
+			EventBus.$emit('forceRerender');
 		},
 	},
 };
@@ -213,7 +213,7 @@ export default {
 					padding: 11px 0;
 
 					p {
-						color: #c8cfd2;
+						color: #1679a3;
 					}
 
 					.added-button {
@@ -229,7 +229,7 @@ export default {
 						margin-left: 60%;
 						padding: 0.4rem;
 						border-radius: 2px;
-						color: #c8cfd2;
+						color: #242524;
 						background-color: transparent;
 						border: 1px solid transparent;
 						cursor: pointer;

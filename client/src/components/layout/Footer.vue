@@ -1,7 +1,7 @@
 <template functional>
     <footer class="footer section__footer">
         <div class="footer__content">
-            <div class="footer__left">
+            <div class="footer__left" >
                 <span>Copyright &copy; 2019 by Vu Hai Dang</span>
             </div>
             <div class="footer__right">

@@ -27,7 +27,7 @@ import RoomInfo from './RoomInfo';
 import { mapGetters } from 'vuex';
 import { getConnection } from '../../utils/websocket';
 import axios from 'axios';
-import { MESSAGE, ONLINE } from '../../utils/evenTypes';
+import { MESSAGE, FILE } from '../../utils/evenTypes';
 import { EventBus } from '../../eventBus.js';
 
 export default {
@@ -72,14 +72,16 @@ export default {
 		this.fetchInfoRoom();
 	},
 	beforeUpdate() {
-		getConnection()
-			.onEvent(MESSAGE, data => {
-				this.$store.dispatch('pushMessageInRoom', data);
+		getConnection().onEvent(MESSAGE, data => {
+			if (data.content.type === 'file') {
+				this.fetchMessage();
+			} else {
+				let lastMsg = Object.assign({ type: 'text' }, data);
+				this.$store.dispatch('pushMessageInRoom', lastMsg);
 				EventBus.$emit('reloadListRoom');
-			})
-			.onEvent(ONLINE, data => {});
+			}
+		});
 	},
-	beforeDestroy() {},
 };
 </script>
 
