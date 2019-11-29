@@ -11,7 +11,7 @@
 	//}
 
 	&__link {
-		color: #fff;
+		color: #000;
 		transition: opacity 0.5s ease;
 		&--gin {
 
@@ -55,18 +55,12 @@
 	&__textbrand {
 		//font-family: 'Russo One', sans-serif;
 		animation: fadeIn 0.5s ease;
+		color: #000;
 	}
 
 	&__icon {
 		font-size: 2.5em;
 		color: #fff;
-
-		&--logo {
-			transform: rotate(45deg);
-			font-size: 1.8em;
-			color: #fff;
-			animation: zoomIn 0.5s linear;
-		}
 	}
 
 	&__nav {
@@ -75,10 +69,6 @@
 		align-items: center;
 		height: 100%;
 		font-size: 15px;
-
-		//@include respond(phone) {
-		//  display: none;
-		//}
 
 		&--right {
 			flex-grow: 1;

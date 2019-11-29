@@ -1,6 +1,6 @@
 <template>
 	<div class="messagesList" id="list" ref="list">
-		<div class="message" v-for="message in getMessagesInRoom">
+		<div class="message" v-for="message in getMessagesInRoom" :key="message._id">
 			<div class="item__right" v-if="message.sender === getUserData.username">
 				<message v-bind:message="message" />
 			</div>

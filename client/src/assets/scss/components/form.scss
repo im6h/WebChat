@@ -4,8 +4,8 @@
   width: 480px;
   margin: 0 auto;
   padding: 3em 1em;
-  background: #18191c;
-  box-shadow: 1px 1px 1px 1px #000;
+  background: #f6f7fa;
+  box-shadow: 1px 1px 1px 1px rgb(243, 241, 241);
   transform: translateY(30px);
 
   &--nbs {
@@ -39,12 +39,12 @@
     position: relative;
     padding: 1em;
     border-radius: 3px;
-    border: 1px solid #fff;
+    border: 1px solid rgb(247, 164, 164);
     background: transparent;
     margin: 1.5em 0 2.5em 0;
     z-index: 1;
     width: 90%;
-    color: #fff;
+    color: #000;
     font-weight: bold;
     //font-family: 'Work Sans', sans-serif;
     outline: none;
@@ -92,7 +92,7 @@
 
   &__link {
     text-decoration: none;
-    color: #fff;
+    color: rgb(0, 0, 0);
     font-weight: bold;
   }
 

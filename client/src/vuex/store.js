@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import _ from 'lodash';
+import { object } from 'prop-types';
 
 Vue.use(Vuex);
 
@@ -48,8 +49,11 @@ export default new Vuex.Store({
         },
 
         PUSH_MESSAGE_IN_ROOM: (state, payload) => {
-            let contain = _.includes(state.messagesInRoom, payload);
-            if (!contain){
+            let contain = _.map(state.messagesInRoom, (n)=>{
+                return n._id;
+            });
+            
+            if (! _.includes(contain,payload._id)){
                 state.messagesInRoom.push(payload);
             }
         }

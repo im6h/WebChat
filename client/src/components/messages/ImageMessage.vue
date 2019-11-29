@@ -1,9 +1,10 @@
-<template
-	><div class="image-message">
-		<a v-bind:href="link" target="_blank"
-			><img v-bind:src="link" v-bind:alt="image.originalname"
-		/></a></div
-></template>
+<template>
+	<div class="image-message">
+		<a v-bind:href="link" target="_blank">
+			<img v-bind:src="link" v-bind:alt="image.originalname" />
+		</a>
+	</div>
+</template>
 
 <script>
 export default {

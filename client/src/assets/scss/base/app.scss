@@ -100,7 +100,7 @@ li .nav__link.router-link-exact-active {
 
 	&--rounded {
 		border-radius: 20px;
-		border: 2px solid #fff;
+		border: 2px solid rgb(32, 31, 31);
 		padding: 5px 17px 7px;
 	}
 
@@ -139,8 +139,8 @@ li .nav__link.router-link-exact-active {
 	}
 
 	&--info {
-		color: #667576;
-		background: #c8d0d2;
+		color: #e5ecec;
+		background: #2112ee;
 		border-radius: 5px;
 		animation-delay: 0.8s;
 	}
