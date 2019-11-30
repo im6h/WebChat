@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "NODE_ENV=production node index.js",
 		"dev-nodemon": "nodemon index.js",
-		"dev": "node index.js",
+		"dev": "node index.js"
 	},
 	"dependencies": {
 		"@stomp/stompjs": "^5.4.2",
