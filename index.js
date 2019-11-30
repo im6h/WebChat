@@ -40,4 +40,7 @@ function _initBaseMiddleware(server) {
 }
 function _initRouter(server) {
 	server.use('/v1', require('./server/routes'));
+	server.get('*', function(req, res) {
+		res.sendFile('./public/index.html');
+	});
 }

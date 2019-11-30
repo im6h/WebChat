@@ -51,7 +51,7 @@ module.exports = wss => {
 			const record = await userModel.findByUsername(data, '_id').lean();
 			if (!record) return ws.emitEvent(EventType.ONLINE, false);
 			const online = await getOnlineState(record._id.toString(), ws.socketManager);
-			ws.emitEvent(EventType.ONLINE, online);
+			ws.emitEvent(EventType.ONLINE, { username: data, isOnline: online });
 		});
 		ws.onEvent(EventType.FILE, async ({ fileId, roomId }) => {
 			const user = ws.user;

@@ -16,12 +16,12 @@ export default {
 	},
 	computed: {
 		link() {
-			const path  = this.file.path;
+			const path = this.file.path;
 			if (path) {
 				if (this.dev) {
 					return `http://localhost:8080/${path}`;
 				}
-				return path;
+				return '/' + path;
 			}
 			return '';
 		},

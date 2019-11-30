@@ -13,7 +13,8 @@
 				</div>
 				<div class="user" v-for="user in roomInfo.members">
 					<span class="user-info">
-						<p>#{{ user.fullName }} ({{ user.username }})</p>
+						<div v-bind:class="getStatusClass(user.username)"></div>
+						<div>#{{ user.fullName }} ({{ user.username }})</div>
 						<a href="#" @click="removeUser(user._id)">Remove</a>
 					</span>
 				</div>
@@ -34,6 +35,8 @@ import { mapGetters } from 'vuex';
 import RoomModal from './RoomModal';
 import axios from 'axios';
 import { EventBus } from '../../eventBus';
+import { getConnection } from '../../utils/websocket';
+import { ONLINE } from '../../utils/evenTypes';
 
 export default {
 	name: 'RoomInfo',
@@ -45,12 +48,23 @@ export default {
 		return {
 			searchInput: '',
 			showModal: false,
+			onlines: [],
+			isLoadeds: new Set(),
 		};
 	},
 	computed: {
 		...mapGetters(['getUserData']),
 	},
 	methods: {
+		getStatusClass(username) {
+			const isOnline = this.onlines.includes(username);
+			if (!isOnline && !this.isLoadeds.has(username)) {
+				this.isLoadeds.add(username);
+				getConnection().emitEvent(ONLINE, username);
+			}
+			if (isOnline) return 'online-status';
+			return 'offline-status';
+		},
 		addUser() {
 			this.showModal = true;
 		},
@@ -79,7 +93,17 @@ export default {
 				});
 		},
 	},
-	beforeCreate() {},
+	beforeCreate() {
+		getConnection().onEvent(ONLINE, ({ username, isOnline }) => {
+			if (isOnline === true) this.onlines.push(username);
+		});
+	},
+	watch: {
+		roomInfo() {
+			this.onlines = [];
+			this.isLoadeds = new Set();
+		},
+	},
 };
 </script>
 
@@ -100,17 +124,21 @@ export default {
 	&__body {
 		height: 50%;
 		width: 100%;
+
 		.add-btn {
 			padding: 8px 15px;
 			border: 1px solid #c8cfd2;
 		}
+
 		.list-user {
 			display: flex;
 			flex-direction: column;
+
 			.modal--people {
 				display: flex;
 				justify-content: center;
 			}
+
 			h2 {
 				margin-top: 20px;
 				margin-bottom: 20px;
@@ -139,10 +167,26 @@ export default {
 				margin: 10px;
 				/* border: 1px solid; */
 				border-bottom: 1px solid #c8cfd2;
+
 				&-info {
 					display: flex;
 					justify-content: space-between;
+					.status {
+						height: 8px;
+						width: 8px;
+						border-radius: 50%;
+						background: #5b6164;
+					}
+					.online-status {
+						@extend .status;
+						background: #4ad79b;
+					}
+					.offline-status {
+						@extend .status;
+						background: #d72b57;
+					}
 				}
+
 				span {
 					width: 100%;
 					display: flex;

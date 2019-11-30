@@ -22,7 +22,7 @@ export default {
 				if (this.dev) {
 					return `http://localhost:8080/${path}`;
 				}
-				return path;
+				return '/' + path;
 			}
 			return '';
 		},
