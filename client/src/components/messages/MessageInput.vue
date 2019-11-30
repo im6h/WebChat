@@ -39,11 +39,11 @@
 			<span class="text-color">
 				<p>{{ fileName }}</p>
 				<div class="btn--action">
-					<div class="btn--info remove-file-btn" @click="removeFile()">Remove</div>
+					<div class="btn--gray remove-file-btn" @click="removeFile()">Remove</div>
 				</div>
 			</span>
 		</div>
-		<button class="btn btn--clear btn--info" @click="sendMessage">Send</button>
+		<button class="btn btn--clear btn--gray" @click="sendMessage">Send</button>
 	</div>
 </template>
 <script>

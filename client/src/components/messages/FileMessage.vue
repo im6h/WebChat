@@ -1,6 +1,6 @@
 <template>
 	<div class="file-message">
-		<a v-bind:href="link" target="_blank">{{ file.originalname }}</a>
+		<a v-bind:href="link" target="_blank" style="color:#616d6d;">{{ file.originalname }}</a>
 		<div>{{ file.size | fileSize }}</div>
 	</div>
 </template>

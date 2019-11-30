@@ -150,6 +150,12 @@ li .nav__link.router-link-exact-active {
 		margin: 0;
 		height: 100%;
 	}
+	&--gray {
+		color: #667576;
+		background: #c8d0d2;
+		border-radius: 5px;
+		animation-delay: 0.8s;
+	}
 }
 
 .badge {
