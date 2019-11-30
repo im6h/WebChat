@@ -31,7 +31,7 @@ module.exports = wss => {
 			wss.emitToRoom(
 				room._id.toString(),
 				EventType.MESSAGE,
-				_.pick(message, ['sender', 'date', 'content', '_id', 'room']),
+				_.pick(message, ['sender', 'date', 'content', '_id', 'room', 'type']),
 			);
 		});
 		ws.onEvent(EventType.TYPING, async data => {
@@ -78,7 +78,7 @@ module.exports = wss => {
 			wss.emitToRoom(
 				room._id.toString(),
 				EventType.MESSAGE,
-				_.pick(message, ['sender', 'date', 'content', '_id', 'room']),
+				_.pick(message, ['sender', 'date', 'content', '_id', 'room', 'type']),
 			);
 		});
 		ws.onEvent(EventType.JOIN, async ({ roomId }) => {

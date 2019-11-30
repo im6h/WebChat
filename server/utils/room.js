@@ -67,7 +67,7 @@ function _getGroupRoomAliasAndAvt(members, userName) {
 		: members
 	).map(m => m.fullName);
 	let name = fullNames.reduce((acc, fullName) => {
-		const a = ' ' + fullName.toUpperCase().charAt(0);
+		const a = '' + fullName.toUpperCase().charAt(0);
 		return acc + a;
 	}, '');
 	return {

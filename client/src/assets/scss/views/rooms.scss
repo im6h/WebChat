@@ -2,7 +2,7 @@
 
 .rooms {
 	background: $primary-container-background;
-	box-shadow: $primary-container-box-shadow;
+	//box-shadow: $primary-container-box-shadow;
 	max-width: 600px;
 	overflow-x: auto;
 
@@ -54,6 +54,48 @@
 			padding: 8px;
 			border-radius: 3px;
 			border: 1px solid $border-color;
+			&.selected {
+				background-color: #616d6d36;
+			}
+			&.animation {
+				animation: colorchange 5s infinite;
+				-webkit-animation: colorchange 5s infinite;
+			}
+			@keyframes colorchange {
+				0% {
+					background: #c8cfd2;
+				}
+				25% {
+					background: #b9c0c3;
+				}
+				50% {
+					background: #a9b0b3;
+				}
+				75% {
+					background: #8d9497;
+				}
+				100% {
+					background: #5b6164;
+				}
+			}
+
+			@-webkit-keyframes colorchange {
+				0% {
+					background: #c8cfd2;
+				}
+				25% {
+					background: #b9c0c3;
+				}
+				50% {
+					background: #a9b0b3;
+				}
+				75% {
+					background: #8d9497;
+				}
+				100% {
+					background: #5b6164;
+				}
+			}
 		}
 		&-message {
 			//display: flex;

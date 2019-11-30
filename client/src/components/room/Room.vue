@@ -73,13 +73,14 @@ export default {
 	},
 	beforeUpdate() {
 		getConnection().onEvent(MESSAGE, data => {
-			if (data.content.type === 'file') {
-				this.fetchMessage();
-			} else {
-				let lastMsg = Object.assign({ type: 'text' }, data);
-				this.$store.dispatch('pushMessageInRoom', lastMsg);
-				EventBus.$emit('reloadListRoom');
+			let roomId = this.$route.params.handle;
+			this.$store.dispatch('updateLastMessage', data);
+			if(roomId !== data.room) {
+				this.$store.dispatch('updateUnread', data.room);
+				return;
 			}
+			this.$store.dispatch('pushMessageInRoom', data);
+			// EventBus.$emit('reloadListRoom');
 		});
 	},
 };

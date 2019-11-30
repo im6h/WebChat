@@ -10,7 +10,7 @@
 								placeholder="Search user | Input name of user"
 								v-model="searchUser"
 							/>
-							<div class="btn btn--info" @click="searchUserByText()">Search</div>
+							<div class="btn btn--gray" @click="searchUserByText()">Search</div>
 						</div>
 					</slot>
 				</div>
@@ -40,13 +40,13 @@
 					</slot>
 					<slot name="body" v-else>
 						<div class="user">
-							<span >No result search</span>
+							<span>No result search</span>
 						</div>
 					</slot>
 				</div>
 				<div class="modal-footer">
 					<slot name="footer">
-						<div class="btn btn--info" @click="closeModal()">
+						<div class="btn btn--gray" @click="closeModal()">
 							Close
 						</div>
 					</slot>
@@ -111,6 +111,7 @@ export default {
 					this.users = _.remove(this.users, n => {
 						return n._id !== userId;
 					});
+					this.$store.dispatch('addMember', { member: res.data.data });
 				})
 				.catch(err => {
 					console.log(err);
@@ -118,7 +119,7 @@ export default {
 		},
 		closeModal() {
 			this.$emit('close');
-			EventBus.$emit('forceRerender');
+			// EventBus.$emit('forceRerender');
 		},
 	},
 };

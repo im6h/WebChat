@@ -6,14 +6,14 @@
 		<div class="room__info__body" v-if="roomInfo.type === 'group'">
 			<div class="list-user">
 				<h2>Members</h2>
-				<span class="modal--people">
+				<div class="modal--people">
 					<a href="#" @click="addUser()">
-						<div class="btn btn--info">Invite member</div>
+						<div class="btn btn--gray">Invite member</div>
 					</a>
-				</span>
+				</div>
 				<div class="user" v-for="user in roomInfo.members">
-					<span>
-						<p>{{ user.username }}</p>
+					<span class="user-info">
+						<p>#{{ user.fullName }} ({{ user.username }})</p>
 						<a href="#" @click="removeUser(user._id)">Remove</a>
 					</span>
 				</div>
@@ -55,7 +55,6 @@ export default {
 			this.showModal = true;
 		},
 		closeModal() {
-			console.log(this);
 			this.showModal = false;
 		},
 		removeUser(userId) {
@@ -108,7 +107,10 @@ export default {
 		.list-user {
 			display: flex;
 			flex-direction: column;
-
+			.modal--people {
+				display: flex;
+				justify-content: center;
+			}
 			h2 {
 				margin-top: 20px;
 				margin-bottom: 20px;
@@ -137,6 +139,10 @@ export default {
 				margin: 10px;
 				/* border: 1px solid; */
 				border-bottom: 1px solid #c8cfd2;
+				&-info {
+					display: flex;
+					justify-content: space-between;
+				}
 				span {
 					width: 100%;
 					display: flex;
@@ -146,7 +152,7 @@ export default {
 					}
 
 					a {
-						margin-left: 20px;
+						margin-right: 10px;
 						padding: 0.1rem;
 						font-size: 12px;
 						/*color: #fff;*/

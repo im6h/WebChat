@@ -19,7 +19,6 @@ export default {
 		link() {
 			const path = this.image.path;
 			if (path) {
-				console.log(this);
 				if (this.dev) {
 					return `http://localhost:8080/${path}`;
 				}

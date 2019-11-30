@@ -46,6 +46,7 @@
 					<a
 						@click.prevent="logout"
 						class="nav__link"
+						href="#"
 					>
 						Logout
 					</a>
