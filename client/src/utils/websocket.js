@@ -5,6 +5,10 @@ import Emitter from './socketEmitter';
 
 function url() {
 	const l = window.location;
+	if(process.env.NODE_ENV === 'production') {
+		const hostname = window.location.hostname;
+		return (l.protocol === 'https:' ? 'wss://' : 'ws://') + hostname + l.pathname;
+	}
 	return (l.protocol === 'https:' ? 'wss://' : 'ws://') + "localhost:" + "8080" + l.pathname;
 }
 
