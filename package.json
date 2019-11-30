@@ -6,9 +6,7 @@
 		"start": "NODE_ENV=production node index.js",
 		"dev-nodemon": "nodemon index.js",
 		"dev": "node index.js",
-		"tsc": "tsc",
-		"build": "next build ./client",
-		"heroku-postbuild": "npm run build"
+		"heroku-postbuild": "cd client && npm run build"
 	},
 	"dependencies": {
 		"@stomp/stompjs": "^5.4.2",

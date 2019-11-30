@@ -4,4 +4,5 @@ module.exports = {
 		host:'localhost',
 		proxy: 'http://localhost:8080',
 	},
+	outputDir: '../public'
 };
