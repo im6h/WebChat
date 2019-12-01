@@ -1,5 +1,6 @@
 const roomModel = require('../../models/room');
 const mongoose = require('mongoose');
+const EventType = require('../eventTypes');
 module.exports.joinAllRoom = async ws => {
 	const userId = ws.user._id;
 	const records = await roomModel.find({ members: userId }, '_id');
@@ -15,3 +16,7 @@ module.exports.joinRoom = async (ws, roomId) => {
 		ws.join(String(record._id));
 	}
 };
+
+module.exports.sendStatus = (ws, username, isOnline) =>{
+	return ws.emitEvent(EventType.ONLINE, { username, isOnline });
+}

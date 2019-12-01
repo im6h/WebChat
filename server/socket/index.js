@@ -15,6 +15,9 @@ module.exports = wss => {
 	console.log('init socket');
 	wss.onEvent('connection', async ws => {
 		await socketUtil.joinAllRoom(ws);
+		if (ws.user && ws.user.username) {
+			socketUtil.sendStatus(ws, ws.user.username, true);
+		}
 		ws.onEvent(EventType.MESSAGE, async data => {
 			const { roomId, content } = data;
 			const user = ws.user;
@@ -49,9 +52,10 @@ module.exports = wss => {
 		ws.onEvent(EventType.ONLINE, async data => {
 			if (!data) return;
 			const record = await userModel.findByUsername(data, '_id').lean();
-			if (!record) return ws.emitEvent(EventType.ONLINE, false);
+			if (!record) return socketUtil.sendStatus(ws, data, false);
 			const online = await getOnlineState(record._id.toString(), ws.socketManager);
-			ws.emitEvent(EventType.ONLINE, { username: data, isOnline: online });
+			socketUtil.sendStatus(ws, data, online);
+			// ws.emitEvent(EventType.ONLINE, { username: data, isOnline: online });
 		});
 		ws.onEvent(EventType.FILE, async ({ fileId, roomId }) => {
 			const user = ws.user;
@@ -91,6 +95,7 @@ module.exports = wss => {
 			setTimeout(() => {
 				if (!ws.socketManager.isOnline(ws.user._id.toString())) {
 					onlineRecordMiddleware.recordOffline(ws.user._id);
+					socketUtil.sendStatus(ws, ws.user.username, false);
 				}
 			}, 2000);
 		});

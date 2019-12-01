@@ -41,6 +41,7 @@ schema.statics.getLastOnlineRecord = async function(userId) {
 		.sort({ updatedAt: -1 })
 		.limit(1)
 		.exec();
+	console.log(records, user);
 	return records && records[0];
 };
 module.exports = mongoose.model('online', schema);

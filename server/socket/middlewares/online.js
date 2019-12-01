@@ -7,7 +7,6 @@ module.exports = async function(ws, fn) {
 	const userId = user._id.toString();
 	if (!socketManager.isOnline(userId)) {
 		await onlineModel.recordOnlineTime(userId);
-		//
 	}
 	socketManager.set(userId, id);
 	ws.socketManager = socketManager;

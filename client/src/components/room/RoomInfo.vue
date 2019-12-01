@@ -1,7 +1,11 @@
 <template>
 	<div class="room__info">
 		<div class="room__info__header">
-			<h3>{{ roomInfo.name }}</h3>
+			<div
+				v-if="roomInfo.type === 'inbox'"
+				v-bind:class="getStatusInboxClass(roomInfo.frUsername)"
+			></div>
+			<h3>#{{ roomInfo.name }}</h3>
 		</div>
 		<div class="room__info__body" v-if="roomInfo.type === 'group'">
 			<div class="list-user">
@@ -13,8 +17,10 @@
 				</div>
 				<div class="user" v-for="user in roomInfo.members">
 					<span class="user-info">
-						<div v-bind:class="getStatusClass(user.username)"></div>
-						<div>#{{ user.fullName }} ({{ user.username }})</div>
+						<div style="display: flex;align-items: center;" v-bind:title="getTimeOnline(user.username)">
+							<div v-bind:class="getStatusClass(user.username)"></div>
+							<div>#{{ user.fullName }} ({{ user.username }})</div>
+						</div>
 						<a href="#" @click="removeUser(user._id)">Remove</a>
 					</span>
 				</div>
@@ -50,12 +56,19 @@ export default {
 			showModal: false,
 			onlines: [],
 			isLoadeds: new Set(),
+			onlineTime: {},
 		};
 	},
 	computed: {
 		...mapGetters(['getUserData']),
 	},
 	methods: {
+		getTimeOnline(username) {
+			return this.onlineTime[username];
+		},
+		getStatusInboxClass(frUsername) {
+			return this.getStatusClass(frUsername);
+		},
 		getStatusClass(username) {
 			const isOnline = this.onlines.includes(username);
 			if (!isOnline && !this.isLoadeds.has(username)) {
@@ -95,7 +108,15 @@ export default {
 	},
 	beforeCreate() {
 		getConnection().onEvent(ONLINE, ({ username, isOnline }) => {
-			if (isOnline === true) this.onlines.push(username);
+			if (isOnline === true) {
+				this.onlines.push(username);
+			} else {
+				if (typeof isOnline === 'string') {
+					this.onlineTime[username] = new Date(isOnline).toLocaleString();
+				}
+
+				this.onlines = this.onlines.filter(user => user !== username);
+			}
 		});
 	},
 	watch: {
@@ -109,6 +130,21 @@ export default {
 
 <style scoped lang="scss">
 .room__info {
+	.status {
+		height: 8px;
+		width: 8px;
+		border-radius: 50%;
+		background: #5b6164;
+		margin-right: 4px;
+	}
+	.online-status {
+		@extend .status;
+		background: #4ad79b;
+	}
+	.offline-status {
+		@extend .status;
+		background: #d72b57;
+	}
 	display: flex;
 	flex-direction: column;
 
@@ -171,20 +207,6 @@ export default {
 				&-info {
 					display: flex;
 					justify-content: space-between;
-					.status {
-						height: 8px;
-						width: 8px;
-						border-radius: 50%;
-						background: #5b6164;
-					}
-					.online-status {
-						@extend .status;
-						background: #4ad79b;
-					}
-					.offline-status {
-						@extend .status;
-						background: #d72b57;
-					}
 				}
 
 				span {

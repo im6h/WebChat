@@ -39,7 +39,7 @@
 					<router-link
 						:to="{ name: 'UserProfile', params: { handle: getUserData.username } }"
 						class="nav__link"
-						>{{ getUserData.username }}
+						>#{{ getUserData.username }} ({{getUserData.fullName}})
 					</router-link>
 				</li>
 				<li class="nav__item">

@@ -54,6 +54,7 @@ async function _getInboxRoomInfo(members, userId) {
 		type: 'inbox',
 		name,
 		avatar: friend.avatar,
+		frUsername: friend.username
 	};
 }
 function _getFriendInfo(members, userId) {
