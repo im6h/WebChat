@@ -18,5 +18,11 @@ module.exports.joinRoom = async (ws, roomId) => {
 };
 
 module.exports.sendStatus = (ws, username, isOnline, broadcast) => {
-	return (broadcast ? ws.broadcastEvent : ws.emitEvent)(EventType.ONLINE, { username, isOnline });
+	if (broadcast) {
+		ws.server.broadcastEvent(EventType.ONLINE, { username, isOnline });
+	}
+	return ws.emitEvent(EventType.ONLINE, {
+		username,
+		isOnline,
+	});
 };

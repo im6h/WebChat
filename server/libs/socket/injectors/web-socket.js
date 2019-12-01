@@ -12,7 +12,8 @@ WebSocket.prototype.join = function(rooms) {
 		this.rooms.add(room);
 	}
 };
-WebSocket.prototype.initExtension = function() {
+WebSocket.prototype.initExtension = function(server) {
+	this.server = server;
 	this.id = uniqid();
 	this.isAlive = true;
 	this.rooms = new Set();

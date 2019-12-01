@@ -22,8 +22,9 @@ class ChatSocketServer extends WebSocketServer {
 		this._hlmMiddleware();
 	}
 	_event() {
+		const that = this;
 		this.on('connection', ws => {
-			ws.initExtension();
+			ws.initExtension(that);
 			this._runWlm(ws, err => {
 				if (err) return ws.close();
 				console.log('connected');
@@ -39,15 +40,17 @@ class ChatSocketServer extends WebSocketServer {
 		});
 	}
 	_polling() {
+		const that = this;
 		this.interval = setInterval(() => {
-			this.clients.forEach(ws => {
-				if (!ws.isAlive) {
-					ws.eventer.emit('disconnect');
-					return ws.terminate();
-				}
-				ws.setNotAlive();
-				ws.ping(_.noop);
-			});
+			that.clients &&
+				that.clients.forEach(ws => {
+					if (!ws.isAlive) {
+						ws.eventer.emit('disconnect');
+						return ws.terminate();
+					}
+					ws.setNotAlive();
+					ws.ping(_.noop);
+				});
 		}, 5000);
 	}
 	_hlmMiddleware() {
