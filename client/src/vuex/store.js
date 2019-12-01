@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import _ from 'lodash';
 import { object } from 'prop-types';
+import { stat } from 'fs';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
 		rooms: [],
 		messagesInRoom: [],
 		currentRoom: {},
+		typing: false
 	},
 	getters: {
 		getUserData: state => state.authUser,
@@ -22,6 +24,8 @@ export default new Vuex.Store({
 		getCurrentRoom: state => state.currentRoom,
 
 		getMessagesInRoom: state => state.messagesInRoom,
+
+		isTyping: state => state.typing
 	},
 	mutations: {
 		// handle user
@@ -79,6 +83,9 @@ export default new Vuex.Store({
 		ADD_MEMBER(state, {  member }) {
 			state.currentRoom.members.push(member);
 		},
+		TYPING_MESSAGE(state,payload){
+			state.typing = payload;
+		}
 	},
 	actions: {
 		// handle user
@@ -123,5 +130,8 @@ export default new Vuex.Store({
 		addMember(context, payload) {
 			context.commit('ADD_MEMBER', payload);
 		},
+		typingMessage(context, payload){
+			context.commit('TYPING_MESSAGE',payload);
+		}
 	},
 });

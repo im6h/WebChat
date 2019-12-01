@@ -9,6 +9,7 @@
 							<div class="chat__actions"></div>
 						</div>
 						<MessageList />
+
 						<MessageInput />
 					</div>
 					<div class="info__room">
@@ -41,12 +42,16 @@ export default {
 		return {
 			roomInfo: {},
 			keyRoomInfo: 0,
+			isTyping: false,
 		};
 	},
 	computed: {
 		...mapGetters({
 			userData: 'getUserData',
 		}),
+		typing() {
+			return true;
+		},
 	},
 	methods: {
 		fetchMessage() {
@@ -74,13 +79,20 @@ export default {
 	beforeUpdate() {
 		getConnection().onEvent(MESSAGE, data => {
 			let roomId = this.$route.params.handle;
-			this.$store.dispatch('updateLastMessage', data);
-			if(roomId !== data.room) {
-				this.$store.dispatch('updateUnread', data.room);
-				return;
+			if (typeof data.content === 'boolean') {
+				if(data.sender === this.userData.username){
+					this.$store.dispatch('typingMessage',false);
+				}else{
+					this.$store.dispatch('typingMessage',data.content);
+				}
+			} else {
+				this.$store.dispatch('updateLastMessage', data);
+				if (roomId !== data.room) {
+					this.$store.dispatch('updateUnread', data.room);
+					return;
+				}
+				this.$store.dispatch('pushMessageInRoom', data);
 			}
-			this.$store.dispatch('pushMessageInRoom', data);
-			// EventBus.$emit('reloadListRoom');
 		});
 	},
 };

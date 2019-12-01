@@ -1,6 +1,9 @@
 <template>
 	<div class="input__chat">
-		<input type="text" v-model="message" @change="onChange" />
+		<div v-if="isTyping" class="type__wrap">
+			<p>Somebody typing ...</p>
+		</div>
+		<input type="text" v-model="message" @change="onChange" @input="onInput" />
 		<emoji-picker @emoji="insert" :search="search">
 			<div
 				class="emoji-invoker"
@@ -48,10 +51,11 @@
 </template>
 <script>
 import { getConnection } from '../../utils/websocket';
-import { MESSAGE, FILE } from '../../utils/evenTypes';
+import { MESSAGE, FILE, TYPING } from '../../utils/evenTypes';
 import EmojiPicker from 'vue-emoji-picker';
 import axios from 'axios';
 import { EventBus } from '../../eventBus.js';
+import { mapGetters } from 'vuex';
 export default {
 	name: 'Chat',
 	components: {
@@ -65,6 +69,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters(['isTyping']),
 		fileName() {
 			return this.file.name.substring(0, 4) + '...';
 		},
@@ -75,6 +80,7 @@ export default {
 		},
 		sendMessage() {
 			let roomId = this.$route.params.handle;
+			this.typing === false;
 			if (this.file !== null) {
 				let form = new FormData();
 				form.append('file', this.file);
@@ -112,6 +118,20 @@ export default {
 			const value = e.target.value;
 			this.sendMessage();
 		},
+		onInput() {
+			let roomId = this.$route.params.handle;
+			if (this.message !== '') {
+				this.sendTyping(roomId, true);
+			}else{
+				this.sendTyping(roomId,false);
+			}
+		},
+		sendTyping(room, typing) {
+			getConnection().emitEvent(TYPING, {
+				room,
+				typing,
+			});
+		},
 	},
 };
 </script>
@@ -128,7 +148,12 @@ export default {
 	width: 94%;
 	left: 4%;
 	right: 4%;
-
+	.type__wrap {
+		position: absolute;
+		bottom: 70px;
+		left: 0px;
+		color: #667576;
+	}
 	input {
 		width: 80%;
 		background-color: transparent;

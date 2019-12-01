@@ -36,15 +36,21 @@ module.exports = wss => {
 		});
 		ws.onEvent(EventType.TYPING, async data => {
 			const user = ws.user;
-			const { isTyping } = data;
+			const content= data.typing;
 			const roomId = data.room;
 			const room = await roomModel.findByIdAndUserId(roomId, user._id).lean();
+			const message = await messageModel.createMessage(
+				user.username,
+				user._id,
+				content,
+				room._id,
+			);
 			if (!room) return ws.close();
-			wss.emitToRoom(room._id.toString(), EventType.TYPING, {
-				room: roomId,
-				isTyping,
-				username: user.username,
-			});
+			wss.emitToRoom(
+				room._id.toString(), 
+				EventType.MESSAGE,
+				_.pick(message, ['sender', 'date', 'content', '_id', 'room', 'type'])
+				);
 		});
 		ws.onEvent(EventType.ONLINE, async data => {
 			if (!data) return;
