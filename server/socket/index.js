@@ -16,7 +16,7 @@ module.exports = wss => {
 	wss.onEvent('connection', async ws => {
 		await socketUtil.joinAllRoom(ws);
 		if (ws.user && ws.user.username) {
-			socketUtil.sendStatus(ws, ws.user.username, true);
+			socketUtil.sendStatus(ws, ws.user.username, true, true);
 		}
 		ws.onEvent(EventType.MESSAGE, async data => {
 			const { roomId, content } = data;
@@ -95,7 +95,7 @@ module.exports = wss => {
 			setTimeout(() => {
 				if (!ws.socketManager.isOnline(ws.user._id.toString())) {
 					onlineRecordMiddleware.recordOffline(ws.user._id);
-					socketUtil.sendStatus(ws, ws.user.username, false);
+					socketUtil.sendStatus(ws, ws.user.username, false, true);
 				}
 			}, 2000);
 		});
