@@ -13,6 +13,7 @@ export default new Vuex.Store({
 		rooms: [],
 		messagesInRoom: [],
 		currentRoom: {},
+		isTypings: ['hi'],
 	},
 	getters: {
 		getUserData: state => state.authUser,
@@ -20,8 +21,8 @@ export default new Vuex.Store({
 
 		getRoomData: state => state.rooms,
 		getCurrentRoom: state => state.currentRoom,
-
 		getMessagesInRoom: state => state.messagesInRoom,
+		getTypings: state => state.isTypings,
 	},
 	mutations: {
 		// handle user
@@ -76,8 +77,17 @@ export default new Vuex.Store({
 				}
 			});
 		},
-		ADD_MEMBER(state, {  member }) {
+		ADD_MEMBER(state, { member }) {
 			state.currentRoom.members.push(member);
+		},
+		SET_TYPINGS(state, { roomId }) {
+			state.isTypings = [];
+		},
+		ADD_TYPING(state, { id }) {
+			state.isTypings = [...new Set([...state.isTypings, id])];
+		},
+		REMOVE_TYPING(state, { id }) {
+			state.isTypings = state.isTypings.filter(i => i !== id);
 		},
 	},
 	actions: {
@@ -122,6 +132,15 @@ export default new Vuex.Store({
 		},
 		addMember(context, payload) {
 			context.commit('ADD_MEMBER', payload);
+		},
+		clearTyping(context) {
+			context.commit('SET_TYPINGS', []);
+		},
+		addTyping(context, payload) {
+			context.commit('ADD_TYPING', payload);
+		},
+		removeTyping(context, payload) {
+			context.commit('REMOVE_TYPING', payload);
 		},
 	},
 });

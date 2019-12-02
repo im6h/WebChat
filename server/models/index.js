@@ -16,5 +16,5 @@ module.exports.models = [
 	require('./comment'),
 	require('./notification'),
 	require('./room'),
-	require('./file'),
+	require('./gridfs')
 ];

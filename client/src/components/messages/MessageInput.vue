@@ -1,6 +1,6 @@
 <template>
 	<div class="input__chat">
-		<input type="text" v-model="message" @change="onChange" />
+		<input type="text" v-model="message" @change="onChange" @input="onInput" />
 		<emoji-picker @emoji="insert" :search="search">
 			<div
 				class="emoji-invoker"
@@ -24,7 +24,8 @@
 									:key="emojiName"
 									@click="insert(emoji)"
 									:title="emojiName"
-								>{{ emoji }}</span>
+									>{{ emoji }}</span
+								>
 							</div>
 						</div>
 					</div>
@@ -48,10 +49,11 @@
 </template>
 <script>
 import { getConnection } from '../../utils/websocket';
-import { MESSAGE, FILE } from '../../utils/evenTypes';
+import { MESSAGE, FILE, TYPING } from '../../utils/evenTypes';
 import EmojiPicker from 'vue-emoji-picker';
 import axios from 'axios';
 import { EventBus } from '../../eventBus.js';
+import { mapGetters } from 'vuex';
 export default {
 	name: 'Chat',
 	components: {
@@ -62,14 +64,30 @@ export default {
 			message: '',
 			search: '',
 			file: null,
+			typeDebounced: _.debounce(isTyping => {
+				let roomId = this.$route.params.handle;
+				getConnection().emitEvent(TYPING, { isTyping, roomId });
+			}, 50),
 		};
 	},
 	computed: {
+		...mapGetters(['getUserData']),
 		fileName() {
 			return this.file.name.substring(0, 4) + '...';
 		},
 	},
 	methods: {
+		onInput({ type, target }) {
+			if (type === 'input') {
+				const value = target.value;
+				// console.log(value);
+				if (value) {
+					this.typeDebounced(true);
+				} else {
+					this.typeDebounced(false);
+				}
+			}
+		},
 		insert(emoji) {
 			this.message += emoji;
 		},
@@ -96,6 +114,7 @@ export default {
 					});
 					this.message = '';
 					EventBus.$emit('reloadMessage');
+					this.$store.dispatch('removeTyping', { roomId, id: this.getUserData.username });
 				}
 			}
 		},
@@ -110,8 +129,21 @@ export default {
 		},
 		onChange(e) {
 			const value = e.target.value;
+			console.log(value);
 			this.sendMessage();
 		},
+	},
+	beforeCreate() {
+		getConnection().onEvent(TYPING, ({ room, isTyping, username }) => {
+			let roomId = this.$route.params.handle;
+			if (room === roomId) {
+				if (isTyping) {
+					this.$store.dispatch('addTyping', { roomId, id: username });
+				} else {
+					this.$store.dispatch('removeTyping', { roomId, id: username });
+				}
+			}
+		});
 	},
 };
 </script>

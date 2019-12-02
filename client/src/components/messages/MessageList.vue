@@ -8,6 +8,9 @@
 				<message v-bind:message="message" />
 			</div>
 		</div>
+		<div class="message typing-message" v-if="shouldBeShowTyping">
+			<small class="text-color">{{ typingText }}</small>
+		</div>
 	</div>
 </template>
 
@@ -21,7 +24,24 @@ export default {
 		return {};
 	},
 	computed: {
-		...mapGetters(['getUserData', 'getMessagesInRoom']),
+		...mapGetters(['getUserData', 'getMessagesInRoom', 'getTypings']),
+		shouldBeShowTyping() {
+			return this.getTypings.length !== 0;
+		},
+		typingText() {
+			const typings = this.getTypings;
+			if (typings.length !== 0) {
+				if (typings.includes(this.getUserData.username)) {
+					if (typings.length === 1) {
+						return 'Bạn đang gõ ...';
+					}
+					return `Bạn và ${typings.length - 1} người đang gõ ...`;
+				} else {
+					return `${typings.length - 1} người đang gõ ...`;
+				}
+			}
+			return 'Someone is typing...';
+		},
 	},
 	methods: {},
 	beforeMount() {},
@@ -89,5 +109,8 @@ export default {
 	align-self: center;
 	/*font-family: 'Work Sans';*/
 	white-space: pre-line;
+}
+.typing-message {
+	padding-left: 30px;
 }
 </style>

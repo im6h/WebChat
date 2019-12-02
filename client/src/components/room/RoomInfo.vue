@@ -17,7 +17,10 @@
 				</div>
 				<div class="user" v-for="user in roomInfo.members">
 					<span class="user-info">
-						<div style="display: flex;align-items: center;" v-bind:title="getTimeOnline(user.username)">
+						<div
+							style="display: flex;align-items: center;"
+							v-bind:title="getTimeOnline(user.username)"
+						>
 							<div v-bind:class="getStatusClass(user.username)"></div>
 							<div>#{{ user.fullName }} ({{ user.username }})</div>
 						</div>
@@ -114,15 +117,17 @@ export default {
 				if (typeof isOnline === 'string') {
 					this.onlineTime[username] = new Date(isOnline).toLocaleString();
 				}
-
 				this.onlines = this.onlines.filter(user => user !== username);
 			}
 		});
 	},
 	watch: {
-		roomInfo() {
+		roomInfo(n, o) {
 			this.onlines = [];
 			this.isLoadeds = new Set();
+			if (n !== o) {
+				this.$store.dispatch('clearTyping');
+			}
 		},
 	},
 };

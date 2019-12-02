@@ -7,7 +7,7 @@ const authMiddleware = require('./middlewares/auth');
 const onlineRecordMiddleware = require('./middlewares/online');
 const onlineModel = require('../models/online');
 const userModel = require('../models/user');
-const fileModel = require('../models/file');
+const getFileModel = require('../models/gridfs').getStreamCollection;
 const commonUtil = require('./utils/common');
 module.exports = wss => {
 	wss.useWLM(onlineRecordMiddleware);
@@ -40,7 +40,7 @@ module.exports = wss => {
 		ws.onEvent(EventType.TYPING, async data => {
 			const user = ws.user;
 			const { isTyping } = data;
-			const roomId = data.room;
+			const roomId = data.roomId;
 			const room = await roomModel.findByIdAndUserId(roomId, user._id).lean();
 			if (!room) return ws.close();
 			wss.emitToRoom(room._id.toString(), EventType.TYPING, {
@@ -60,14 +60,14 @@ module.exports = wss => {
 		ws.onEvent(EventType.FILE, async ({ fileId, roomId }) => {
 			const user = ws.user;
 			const room = await roomModel.findByIdAndUserId(roomId, user._id);
-			const record = await fileModel.findById(fileId);
+			const record = await getFileModel().files.findById(fileId);
 			if (!room || !record) return ws.close();
-			const type = commonUtil.isImage(record.mimetype) ? 'image' : 'file';
+			const type = commonUtil.isImage(record.contentType) ? 'image' : 'file';
 			const content = {
-				path: record.path,
-				size: record.size,
-				mimetype: record.mimetype,
-				originalname: record.originalname,
+				path: `v1/file/${fileId}`,
+				size: record.chunkSize,
+				mimetype: record.contentType,
+				originalname: record.metadata && record.metadata.originalname,
 				type,
 			};
 			const message = await messageModel.createMessage(

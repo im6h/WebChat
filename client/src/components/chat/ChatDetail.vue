@@ -39,6 +39,7 @@ export default {
 	beforeDestroy() {
 		EventBus.$off('forceRerender');
 	},
+
 };
 </script>
 
