@@ -114,8 +114,8 @@ export default {
 					});
 					this.message = '';
 					EventBus.$emit('reloadMessage');
-					this.$store.dispatch('removeTyping', { roomId, id: this.getUserData.username });
 				}
+				this.typeDebounced(false);
 			}
 		},
 		selectFile() {
