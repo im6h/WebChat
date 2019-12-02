@@ -37,7 +37,7 @@ export default {
 					}
 					return `Bạn và ${typings.length - 1} người đang gõ ...`;
 				} else {
-					return `${typings.length - 1} người đang gõ ...`;
+					return `${typings.length} người đang gõ ...`;
 				}
 			}
 			return 'Someone is typing...';
