@@ -33,7 +33,13 @@ const schema = new mongoose.Schema(
 		timestamps: true,
 	},
 );
-schema.statics.findByIdAndUserId = function(id, userId) {
+schema.statics.findByIdAndUserId = function(id, userId, withMember = false) {
+	if (withMember) {
+		return this.findOne({
+			_id: mongoose.Types.ObjectId(id),
+			members: mongoose.Types.ObjectId(userId),
+		}).populate('members', typeof withMember === 'object' ? withMember : undefined);
+	}
 	return this.findOne({
 		_id: mongoose.Types.ObjectId(id),
 		members: mongoose.Types.ObjectId(userId),

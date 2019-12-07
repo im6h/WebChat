@@ -41,7 +41,7 @@ export function getConnection() {
 		}
 	};
 	connection.onerror = error => {
-		console.log('Looxi', error.message);
+		console.log('Looxi', error);
 	};
 	connection.onmessage = function(e) {
 		const rawData = e.data;

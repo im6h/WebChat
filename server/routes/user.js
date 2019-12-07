@@ -6,6 +6,7 @@ const validateReq = require('../middlewares/validate-req');
 const userModel = require('../models/user');
 const passport = require('passport');
 const mustAuth = require('../middlewares/must-auth');
+const fcm = require('../utils/fcm');
 // login user
 router.post('/login', function(req, res, next) {
 	passport.authenticate('local', (err, user, info) => {
@@ -48,7 +49,7 @@ router.post(
 // logout
 router.get('/logout', function(req, res) {
 	req.logout();
-	res.status(status.OK).send({message:'Đăng xuất thành công'})
+	res.status(status.OK).send({ message: 'Đăng xuất thành công' });
 	// res.redirect('/login');
 });
 // search user with text
@@ -63,7 +64,18 @@ router.get('/search', mustAuth, async (req, res) => {
 });
 // get current user
 router.get('/current', mustAuth, (req, res) => {
-	const { _id,username, fullName, avatar } = req.user;
-	res.send({ _id,username, fullName, avatar });
+	const { _id, username, fullName, avatar } = req.user;
+	res.send({ _id, username, fullName, avatar });
+});
+
+router.post('/fcm', mustAuth, async (req, res) => {
+	const token = req.body.token;
+	try {
+		await fcm.subscribe(req.user.username, token);
+		res.send({ status: 'success' });
+	} catch (e) {
+		res.status(500).send({ status: 'error', message: e.message });
+	}
+
 });
 module.exports = router;

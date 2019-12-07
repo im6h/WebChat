@@ -21,8 +21,13 @@ module.exports = wss => {
 		ws.onEvent(EventType.MESSAGE, async data => {
 			const { roomId, content } = data;
 			const user = ws.user;
-			const room = await roomModel.findByIdAndUserId(roomId, user._id);
+			const room = await roomModel.findByIdAndUserId(roomId, user._id, { username: 1 });
 			if (!room) return ws.close();
+			await commonUtil.sendNotification(
+				room.members.map(i => i.username).filter(i => i !== ws.user.username),
+				ws.user.username,
+				content,
+			);
 			const message = await messageModel.createMessage(
 				user.username,
 				user._id,

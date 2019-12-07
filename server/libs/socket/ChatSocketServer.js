@@ -26,6 +26,7 @@ class ChatSocketServer extends WebSocketServer {
 		this.on('connection', ws => {
 			ws.initExtension(that);
 			this._runWlm(ws, err => {
+				if(err) console.log(err);
 				if (err) return ws.close();
 				console.log('connected');
 				this.eventer.emit('connection', ws);
