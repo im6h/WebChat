@@ -34,6 +34,10 @@ export function registerToken() {
 		console.log('success');
 	}).catch((e) => {
 		// console.error(e);
-		// messaging.deleteToken(_token).then(r => console.log(r));
+		deleteToken();
 	});
+}
+
+export function deleteToken() {
+	messaging.deleteToken(_token).then(r => console.log(r));
 }
