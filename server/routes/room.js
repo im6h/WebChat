@@ -49,6 +49,7 @@ async function _getGroupRoomInfo(memberIds) {
 }
 async function _getInboxRoomInfo(members, userId) {
 	const friend = await _getFriendInfo(members, userId);
+	if(!friend) return {};
 	let name = friend.fullName;
 	return {
 		type: 'inbox',
@@ -63,7 +64,7 @@ function _getFriendInfo(members, userId) {
 }
 function _getFriendId(members, userId) {
 	for (let member of members) {
-		if (member !== userId) return member;
+		if (String(member) !== userId) return member;
 	}
 	return null;
 }
