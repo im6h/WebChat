@@ -104,7 +104,7 @@ router.get('/user/:username', mustAuth, async (req, res) => {
 	if (req.query.api) {
 		return res.send(room);
 	}
-	res.redirect('/chat');
+	res.redirect('/chat/' + room._id);
 });
 
 async function findOrCreateRoom(userName, myUserId) {
