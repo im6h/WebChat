@@ -100,7 +100,7 @@ router.get(
 	},
 );
 router.get('/user/:username', mustAuth, async (req, res) => {
-	const room = await findOrCreateRoom(req.params.username, req.user.username);
+	const room = await findOrCreateRoom(req.params.username, req.user._id);
 	if (req.query.api) {
 		return res.send(room);
 	}
