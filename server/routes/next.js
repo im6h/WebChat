@@ -30,16 +30,16 @@ module.exports = function(server, app) {
 function isRoomId(roomId) {
 	return isObjectId(roomId);
 }
-async function findOrCreateRoom(userName, myUserId) {
-	const user = await userModel.findByUsername(userName).lean();
-	if (!user) {
-		return false;
-	}
-	const room = await roomModel.findByMembers([user._id, myUserId]);
-	if (room) return room;
-	return roomModel.create({
-		members: [toObjectId(user._id), toObjectId(myUserId)],
-		type: 'inbox',
-		creator: toObjectId(myUserId),
-	});
-}
+// async function findOrCreateRoom(userName, myUserId) {
+// 	const user = await userModel.findByUsername(userName).lean();
+// 	if (!user) {
+// 		return false;
+// 	}
+// 	const room = await roomModel.findByMembers([user._id, myUserId]);
+// 	if (room) return room;
+// 	return roomModel.create({
+// 		members: [toObjectId(user._id), toObjectId(myUserId)],
+// 		type: 'inbox',
+// 		creator: toObjectId(myUserId),
+// 	});
+// }

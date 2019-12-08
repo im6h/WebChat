@@ -6,6 +6,8 @@ const status = require('http-status');
 const { query } = require('express-validator');
 const reqValidate = require('../middlewares/validate-req');
 const roomHelper = require('../utils/room');
+const isObjectId = require('mongoose').Types.ObjectId.isValid;
+const toObjectId = require('mongoose').Types.ObjectId;
 // get list rooms
 router.get('/', mustAuth, async (req, res) => {
 	const user = req.user;
@@ -29,6 +31,7 @@ router.get('/info/:id', mustAuth, async (req, res) => {
 	}
 	res.send(await _getInfoByType(room.type, room.members, user.id, room.id));
 });
+
 function _getInfoByType(type, members, userId, roomId) {
 	if (type === 'group') {
 		return _getGroupRoomInfo(members, roomId);
@@ -36,6 +39,7 @@ function _getInfoByType(type, members, userId, roomId) {
 		return _getInboxRoomInfo(members, userId);
 	}
 }
+
 async function _getGroupRoomInfo(memberIds) {
 	const members = await Promise.all(memberIds.map(id => _getInfo(id)));
 	const name = members.reduce((acc, member) => {
@@ -47,30 +51,35 @@ async function _getGroupRoomInfo(memberIds) {
 		name,
 	};
 }
+
 async function _getInboxRoomInfo(members, userId) {
 	const friend = await _getFriendInfo(members, userId);
-	if(!friend) return {};
+	if (!friend) return {};
 	let name = friend.fullName;
 	return {
 		type: 'inbox',
 		name,
 		avatar: friend.avatar,
-		frUsername: friend.username
+		frUsername: friend.username,
 	};
 }
+
 function _getFriendInfo(members, userId) {
 	const friendId = _getFriendId(members, userId);
 	return _getInfo(friendId);
 }
+
 function _getFriendId(members, userId) {
 	for (let member of members) {
 		if (String(member) !== userId) return member;
 	}
 	return null;
 }
+
 function _getInfo(id) {
 	return userModel.findById(id, 'username fullName avatar').lean();
 }
+
 // search room with text
 router.get(
 	'/search',
@@ -90,5 +99,26 @@ router.get(
 		return res.send(records);
 	},
 );
+router.get('/user/:username', mustAuth, async (req, res) => {
+	const room = await findOrCreateRoom(req.params.username, req.user.username);
+	if (req.query.api) {
+		return res.send(room);
+	}
+	res.redirect('/chat');
+});
+
+async function findOrCreateRoom(userName, myUserId) {
+	const user = await userModel.findByUsername(userName).lean();
+	if (!user) {
+		return false;
+	}
+	const room = await roomModel.findByMembers([user._id, myUserId]);
+	if (room) return room;
+	return roomModel.create({
+		members: [toObjectId(user._id), toObjectId(myUserId)],
+		type: 'inbox',
+		creator: toObjectId(myUserId),
+	});
+}
 
 module.exports = router;

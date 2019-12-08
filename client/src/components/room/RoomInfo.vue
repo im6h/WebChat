@@ -22,7 +22,12 @@
 							v-bind:title="getTimeOnline(user.username)"
 						>
 							<div v-bind:class="getStatusClass(user.username)"></div>
-							<div>#{{ user.fullName }} ({{ user.username }})</div>
+							<div>
+								#{{ user.fullName }}
+								<a class="room-link" v-bind:href="createUserRoomLink(user.username)"
+									>({{ user.username }})</a
+								>
+							</div>
 						</div>
 						<a href="#" @click="removeUser(user._id)">Remove</a>
 					</span>
@@ -66,6 +71,9 @@ export default {
 		...mapGetters(['getUserData']),
 	},
 	methods: {
+		createUserRoomLink(username) {
+			return '/v1/room/user/' + username;
+		},
 		getTimeOnline(username) {
 			return this.onlineTime[username];
 		},
@@ -142,14 +150,17 @@ export default {
 		background: #5b6164;
 		margin-right: 4px;
 	}
+
 	.online-status {
 		@extend .status;
 		background: #4ad79b;
 	}
+
 	.offline-status {
 		@extend .status;
 		background: #d72b57;
 	}
+
 	display: flex;
 	flex-direction: column;
 
@@ -212,6 +223,11 @@ export default {
 				&-info {
 					display: flex;
 					justify-content: space-between;
+
+					.room-link {
+						color: #3c9adf;
+						font-size: 15px;
+					}
 				}
 
 				span {
