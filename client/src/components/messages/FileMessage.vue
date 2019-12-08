@@ -1,5 +1,5 @@
 <template>
-	<div class="file-message">
+	<div class="file-message" :title="nTitle">
 		<a v-bind:href="link" target="_blank" style="color:#616d6d;">{{ file.originalname }}</a>
 		<div>{{ file.size | fileSize }}</div>
 	</div>
@@ -8,7 +8,7 @@
 <script>
 export default {
 	name: 'FileMessage',
-	props: ['file'],
+	props: ['file', 'sender', 'date'],
 	data() {
 		return {
 			dev: window.location.hostname === 'localhost',
@@ -24,6 +24,10 @@ export default {
 				return '/' + path;
 			}
 			return '';
+		},
+		nTitle() {
+			const date = new Date(this.date).toLocaleString();
+			return `${this.sender} at ${date}`;
 		},
 	},
 };

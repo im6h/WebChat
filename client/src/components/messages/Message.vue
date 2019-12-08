@@ -1,8 +1,23 @@
 <template>
 	<div class="item__content">
-		<text-message v-if="message.type === 'text'" v-bind:content="message.content" />
-		<file-message v-if="message.type === 'file'" v-bind:file="message.content" />
-		<image-message v-if="message.type === 'image'" v-bind:image="message.content" />
+		<text-message
+			v-if="message.type === 'text'"
+			v-bind:content="message.content"
+			v-bind:sender="message.sender"
+			v-bind:date="message.date"
+		/>
+		<file-message
+			v-if="message.type === 'file'"
+			v-bind:file="message.content"
+			v-bind:sender="message.sender"
+			v-bind:date="message.date"
+		/>
+		<image-message
+			v-if="message.type === 'image'"
+			v-bind:image="message.content"
+			v-bind:sender="message.sender"
+			v-bind:date="message.date"
+		/>
 	</div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="image-message">
+	<div class="image-message" :title="nTitle">
 		<a v-bind:href="link" target="_blank">
 			<img v-bind:src="link" v-bind:alt="image.originalname" />
 		</a>
@@ -9,7 +9,7 @@
 <script>
 export default {
 	name: 'ImageMessage',
-	props: ['image'],
+	props: ['image', 'sender', 'date'],
 	data() {
 		return {
 			dev: window.location.hostname === 'localhost',
@@ -25,6 +25,10 @@ export default {
 				return '/' + path;
 			}
 			return '';
+		},
+		nTitle() {
+			const date = new Date(this.date).toLocaleString();
+			return `${this.sender} at ${date}`;
 		},
 	},
 };
